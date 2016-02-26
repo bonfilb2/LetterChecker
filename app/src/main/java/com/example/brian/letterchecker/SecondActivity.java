@@ -7,7 +7,7 @@ import android.gesture.GestureLibrary;
 import android.gesture.GestureOverlayView;
 import android.gesture.Prediction;
 import android.os.Bundle;
-import android.widget.Toast;
+import android.widget.LinearLayout;
 
 import java.util.ArrayList;
 
