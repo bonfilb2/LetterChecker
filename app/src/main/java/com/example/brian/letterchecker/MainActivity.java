@@ -17,29 +17,19 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
     }
 
     public void moveActivity(View v){
         String button_text;
         button_text = ((Button) v).getText().toString();
 
-        if (button_text.equals("Open Second Activity"))
+        if (button_text.equals("Practice Mode"))
         {
             Intent intent = new Intent(this,SecondActivity.class);
             startActivity(intent);
         }
-        else if (button_text.equals("Open Third Activity"))
+        else if (button_text.equals("Quiz Mode"))
         {
             Intent intent = new Intent(this,ThirdActivity.class);
             startActivity(intent);
