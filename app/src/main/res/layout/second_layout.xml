@@ -27,4 +27,5 @@
         android:id="@+id/imageView"
         android:layout_gravity="center"
         android:src="@drawable/g_grey2"/>
+    <!-- comment -->
 </LinearLayout>
