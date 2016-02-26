@@ -36,7 +36,9 @@ public class SecondActivity extends Activity implements GestureOverlayView.OnGes
         Prediction prediction = predictions.get(0); //get first prediction (most probable)
 
         if (prediction.score > 4.0) {       //if input is correct, display message, 4.0 used to ensure stricter, use lower value if comparing against larger library
-            Toast.makeText(this, prediction.name, Toast.LENGTH_SHORT).show();
+            //change background image if gesture matches (currently only works for a)
+            LinearLayout layout=(LinearLayout)findViewById(R.id.secondLay);
+            layout.setBackgroundResource(R.mipmap.b);
         }
 
     }
