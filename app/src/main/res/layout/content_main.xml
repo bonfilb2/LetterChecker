@@ -33,4 +33,14 @@
         android:layout_alignRight="@+id/secondActivityBtn"
         android:layout_alignEnd="@+id/secondActivityBtn"
         android:onClick="moveActivity" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="ClearData"
+        android:id="@+id/clearData"
+        android:layout_marginBottom="80dp"
+        android:onClick="clearData"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true" />
 </RelativeLayout>
