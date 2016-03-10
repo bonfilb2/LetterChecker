@@ -19,9 +19,11 @@
         android:src="@drawable/practice_t"
         android:id="@+id/secondActivityBtn"
         android:onClick="moveActivity"
-        android:layout_marginTop="38dp"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true" />
+        android:layout_marginLeft="60dp"
+        android:layout_marginStart="60dp"
+        android:layout_alignTop="@+id/thirdActivityBtn"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
 
     <ImageButton
         android:layout_width="180dp"
@@ -30,10 +32,11 @@
         android:src="@drawable/quiz_1"
         android:id="@+id/thirdActivityBtn"
         android:onClick="moveActivity"
-        android:layout_below="@+id/secondActivityBtn"
-        android:layout_alignLeft="@+id/secondActivityBtn"
-        android:layout_alignStart="@+id/secondActivityBtn"
-        android:layout_marginTop="35dp" />
+        android:layout_marginLeft="45dp"
+        android:layout_marginStart="45dp"
+        android:layout_centerVertical="true"
+        android:layout_toRightOf="@+id/secondActivityBtn"
+        android:layout_toEndOf="@+id/secondActivityBtn" />
 
     <ImageButton
         android:layout_width="65dp"

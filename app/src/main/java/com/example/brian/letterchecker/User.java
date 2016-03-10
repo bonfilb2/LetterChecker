@@ -1,5 +1,7 @@
 package com.example.brian.letterchecker;
 
+import java.util.ArrayList;
+
 /**
  * Created by Brian on 27/02/2016.
  */
@@ -21,5 +23,9 @@ public class User {
         this.sclass = "";
         this.name = "";
         this.surname = "";
+    }
+
+    public User(ArrayList<String> letters) {
+
     }
 }

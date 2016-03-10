@@ -12,10 +12,14 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
+import java.lang.reflect.Array;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLEncoder;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
 
 /**
  * Created by Brian on 03/03/16.
@@ -25,6 +29,7 @@ public class BackgroundWorker extends AsyncTask<Void,Void,User> {
     //AlertDialog alertDialog;
     User user;
     String type;
+    ArrayList<String> letters;
 
     ProgressDialog progressDialog;
 
@@ -42,11 +47,19 @@ public class BackgroundWorker extends AsyncTask<Void,Void,User> {
         progressDialog.setMessage("Please wait...");
         progressDialog.show();
     }
+    // Second constructor for an array of letters, no progress dialog
+    public BackgroundWorker (String type, User user, Context context, ArrayList<String> letters) {
+        this.type = type;
+        this.user = user;
+        this.context = context;
+        this.letters = letters;
+    }
 
     @Override
     protected User doInBackground(Void... params) {
         String login_url = "http://student.computing.dcu.ie/~bonfilb2/login.php";
         String register_url = "http://student.computing.dcu.ie/~bonfilb2/register.php";
+        String quiz_url = "http://student.computing.dcu.ie/~bonfilb2/quiz.php";
         if(type.equals("login")) {
             try {
                 String user_name = user.username;
@@ -121,6 +134,56 @@ public class BackgroundWorker extends AsyncTask<Void,Void,User> {
                 inputStream.close();
                 httpURLConnection.disconnect();
                 // Check if php script did not return this message, if it didn't register wasn't a success
+                System.out.println(result);
+                if(!result.equals("Insert successful")) {
+                    user = null;
+                }
+                return user;
+            } catch (MalformedURLException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        } else if(type.equals("quiz")) {
+            try {
+                URL url = new URL(quiz_url);
+                HttpURLConnection httpURLConnection = (HttpURLConnection)url.openConnection();
+                httpURLConnection.setRequestMethod("POST");
+                httpURLConnection.setDoOutput(true);
+                httpURLConnection.setDoInput(true);
+                OutputStream outputStream = httpURLConnection.getOutputStream();
+                BufferedWriter bufferedWriter = new BufferedWriter(new OutputStreamWriter(outputStream, "UTF-8"));
+                StringBuilder stringBuilder = new StringBuilder();
+                // Add in date to start of string
+                String date = new SimpleDateFormat("dd-MM-yyyy").format(new Date());
+                stringBuilder.append(URLEncoder.encode("date", "UTF-8")+"="+URLEncoder.encode(date,"UTF-8"));
+                for(int i = 0; i < letters.size()-1; i = i+2)
+                {
+                    stringBuilder.append(URLEncoder.encode(""+letters.get(i),"UTF-8")+"="+URLEncoder.encode(letters.get(i+1),"UTF-8"));
+                    stringBuilder.append("&");
+                }
+                // Remove the last &
+                if (stringBuilder.length() > 0)
+                {
+                    stringBuilder.deleteCharAt(stringBuilder.length()-1);
+                }
+                String post_data = ""+stringBuilder;
+                bufferedWriter.write(post_data);
+                bufferedWriter.flush();
+                bufferedWriter.close();
+                outputStream.close();
+                InputStream inputStream = httpURLConnection.getInputStream();
+                BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream,"iso-8859-1"));
+                String result="";
+                String line="";
+                // Build a string from the returned php script message
+                while((line = bufferedReader.readLine())!= null) {
+                    result += line;
+                }
+                bufferedReader.close();
+                inputStream.close();
+                httpURLConnection.disconnect();
+                System.out.println(result);
                 if(!result.equals("Insert successful")) {
                     user = null;
                 }
@@ -146,6 +209,7 @@ public class BackgroundWorker extends AsyncTask<Void,Void,User> {
         // Call the AsyncResponse to send the user back to another class
         delegate.processFinish(returnUser);
         super.onPostExecute(returnUser);
+        progressDialog.dismiss();
     }
 
     @Override

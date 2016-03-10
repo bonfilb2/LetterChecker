@@ -32,18 +32,10 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(new Intent(this, SecondActivity.class));
                 break;
             case R.id.thirdActivityBtn:
-                startActivity(new Intent(this, ThirdActivity.class));
+                startActivity(new Intent(this, QuizMode.class));
                 break;
-        }
-    }
-
-    public void clearData(View v) {
-        switch(v.getId()) {
-            case R.id.clearData:
-                UserLocalStore userLocalStore = new UserLocalStore(this);
-                userLocalStore.clearUserData();
-                System.out.println("Cleared data");
-                break;
+            case R.id.btnSettings:
+                startActivity(new Intent(this, Settings.class));
         }
     }
 
