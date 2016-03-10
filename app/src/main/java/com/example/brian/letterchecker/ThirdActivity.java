@@ -9,15 +9,20 @@ import android.gesture.GestureLibraries;
 import android.gesture.GestureLibrary;
 import android.gesture.GestureOverlayView;
 import android.gesture.Prediction;
+import android.graphics.drawable.AnimationDrawable;
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.SystemClock;
 import android.util.Log;
+import android.view.MotionEvent;
+import android.view.View;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
-import java.io.File;
-import java.io.FileOutputStream;
+
+import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.Timer;
+import java.util.TimerTask;
 
 /**
  * Created by Brian on 22/02/2016.
@@ -31,10 +36,10 @@ public class ThirdActivity extends Activity implements GestureOverlayView.OnGest
     private long timeAllowed = 60000;   //get from teacher
     private long totalTime;
     private int attempts;
-    private int attemptsAllowed = 1;    //get from teacher
-    private String attemptResult;
+    private int attemptsAllowed = 2;    //get from teacher
+    private ArrayList<Integer> quizResult;
     private int successAttempt;
-
+    private GestureOverlayView gestures;
     private Intent finish;  // not sure if this is how to end activity?
 
 
@@ -45,6 +50,7 @@ public class ThirdActivity extends Activity implements GestureOverlayView.OnGest
         getQuizInfo();      //will be called to get info about quiz
         time = SystemClock.elapsedRealtime();   // get time quiz starts
         finish = new Intent (this,MainActivity.class);  // go back to menu after condition
+        quizResult = new ArrayList();
 
 
         listOfLetters = GestureLibraries.fromRawResource(this, R.raw.gesture); //abc is the file containing gestures
@@ -52,20 +58,20 @@ public class ThirdActivity extends Activity implements GestureOverlayView.OnGest
             finish();
         }
 
-        GestureOverlayView gestures = (GestureOverlayView) findViewById(R.id.gesturesOverlay);
+        gestures = (GestureOverlayView) findViewById(R.id.gesturesOverlay);
         gestures.setGestureStrokeAngleThreshold(90.0f);        // otherwise ignores straight lines
-        gestures.setFadeOffset(500);        //to prevent gestures from disappearing too quickly
-        gestures.setGestureStrokeLengthThreshold(0.000001f);        //to allow small dots to be made; ie for letter i or j
+        gestures.setFadeOffset(1000);        //to prevent gestures from disappearing too quickly
+        gestures.setGestureStrokeLengthThreshold(0.000000001f);        //to allow small dots to be made; ie for letter i or j
         gestures.addOnGesturePerformedListener(this);
 
     }
-
-
+    
 
     public void getQuizInfo(){
         //will get the info for the quiz such as attempts allowed, max time etc
 
     }
+
 
     //when a gesture is made:
     public void onGesturePerformed(GestureOverlayView overlay, Gesture gesture) {
@@ -81,7 +87,6 @@ public class ThirdActivity extends Activity implements GestureOverlayView.OnGest
         Resources res = getResources();
         TypedArray currentLetter = res.obtainTypedArray(R.array.alphabet);    //obtain info from arrays.xml
         TypedArray letterName = res.obtainTypedArray(R.array.alphabetId); //same as above
-        TextView t = (TextView)findViewById(R.id.textView4);
         Log.v("prediction i:", " " + predictions.get(0).toString().equals(letterName.getString(i)));
         //---------------------------------------------------------
 
@@ -95,6 +100,9 @@ public class ThirdActivity extends Activity implements GestureOverlayView.OnGest
         //conditions to end activity, having this within onGesturePerformed allows students to submit last effort
         if(totalTime > timeAllowed/1000){
             // save totalTime if not exceeding timeAllowed
+            for(int i : quizResult) {
+                Log.v("success : ", i + "");
+            }
             startActivity(finish);
         }
 
@@ -102,18 +110,20 @@ public class ThirdActivity extends Activity implements GestureOverlayView.OnGest
 
         //Test whether gesture input is acceptable ----------------
         if (predictions.get(0).toString().equals(letterName.getString(i)) || attempts > attemptsAllowed){       // if top prediction matches what you're looking for
-
             if (prediction.score > 1.0 || attempts > attemptsAllowed) {       //if input is correct, display message, 4.0 used to ensure stricter, use lower value if comparing against larger library
                 //change background image if gesture matches (currently only works for a)
-
                 successAttempt++;
 
                 //after exceeding attempts allowed, move to next letter
                 if(attempts > attemptsAllowed) {
-                    //results for current letter all in one string, can break up if easier:
-                    attemptResult = "Letter : " + letterName.getString(i) + " results: "+ successAttempt + "/" + (attemptsAllowed+1); // 0 attemptsAllowed = 1
-                    Log.v("attemptResult", attemptResult);
-                    //move to next letter, reset variables
+
+                    
+                    /***************************
+                    *   Array here
+                    *
+                    * **************************/
+                    quizResult.add(successAttempt);
+
                     i++;
                     attempts = 0;
                     successAttempt=0;
@@ -123,8 +133,7 @@ public class ThirdActivity extends Activity implements GestureOverlayView.OnGest
                     i = 0;              // go back to index first letter, just used for testing
 
                 currentImage.setImageDrawable(currentLetter.getDrawable(i));
-                t.setText(letterName.getString(i));
-                if(letterName.getString(i).equals("t") || letterName.getString(i).equals("i")) // j, k x, etc                                                       // if multiple strokes required
+                if(letterName.getString(i).equals("a") || letterName.getString(i).equals("p") || letterName.getString(i).equals("t") || letterName.getString(i).equals("i") || letterName.getString(i).equals("n")) // j, k x, etc                                                       // if multiple strokes required
                     overlay.setGestureStrokeType(1);
                 else
                     overlay.setGestureStrokeType(0);
