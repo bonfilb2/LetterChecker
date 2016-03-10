@@ -9,26 +9,37 @@ import java.util.ArrayList;
  * Arraylist which will obtain it's capacity from length of the library of letters
  */
 public class resultHolder {
-    private ArrayList<Integer> results = new ArrayList();
+    private ArrayList<Integer> temp = new ArrayList();
+    private ArrayList<String> results = new ArrayList();
+    private TypedArray ta;
 
     resultHolder(TypedArray t){
+        ta = t;
         for(int i=0;i<t.length();i++)
         {
-            results.add(0);
+            temp.add(0);
         }
     }
 
     public void incrementIndex(int index, int amount){
-        int t= results.get(index);
+        int t= temp.get(index);
         t = t+amount;
-        results.set(index, t);
+        temp.set(index, t);
     }
 
     public String toString() {
         String s="";
         for (int i = 0; i < results.size(); i++) {
-            s = s+"index " + i + " value " + results.get(i) + " ";
+            s = s+results.get(i);
         }
         return s;
+    }
+
+    public ArrayList<String> finalResult(){
+        for(int i=0;i<ta.length();i++){
+            results.add(ta.getString(i));
+            results.add(""+temp.get(i));
+        }
+        return results;
     }
 }
