@@ -75,7 +75,7 @@ public class ThirdActivity extends Activity implements GestureOverlayView.OnGest
 
     //when a gesture is made:
     public void onGesturePerformed(GestureOverlayView overlay, Gesture gesture) {
-        attempts++; // gesture is inputted, increase attempts
+
         ArrayList<Prediction> predictions = listOfLetters.recognize(gesture);   //input is tested against entire library of accepted gestures, list ordered by most probable to least
         Prediction prediction = predictions.get(0); //get first prediction (most probable)
         Log.v("prediction 1:", " " + predictions.get(0));
@@ -105,37 +105,35 @@ public class ThirdActivity extends Activity implements GestureOverlayView.OnGest
 
         Log.v("attempts allowed : ", + attemptsAllowed + " attempts made: " + attempts);
 
+        attempts++; // gesture is inputted, increase attempts
+
         //Test whether gesture input is acceptable ----------------
-        if (predictions.get(0).toString().equals(letterName.getString(i)) || attempts > attemptsAllowed){       // if top prediction matches what you're looking for
-            if (prediction.score > 1.0 || attempts > attemptsAllowed) {       //if input is correct, display message, 4.0 used to ensure stricter, use lower value if comparing against larger library
-                //change background image if gesture matches (currently only works for a)
-                successAttempt++;
-
-                //after exceeding attempts allowed, move to next letter
-                if(attempts > attemptsAllowed) {
-
-
-                    /***************************
-                     *   Array here
-                     *
-                     * **************************/
-                    results.incrementIndex(i, successAttempt);
-                    Log.v("value of arrayList", results + "");
-                    i++;
-                    attempts = 0;
-                    successAttempt=0;
-                }
-
-                if (i == currentLetter.length())
-                    i = 0;              // go back to index first letter, just used for testing
-
-                currentImage.setImageDrawable(currentLetter.getDrawable(i));
-                if(letterName.getString(i).equals("a") || letterName.getString(i).equals("p") || letterName.getString(i).equals("t") || letterName.getString(i).equals("i") || letterName.getString(i).equals("n")) // j, k x, etc                                                       // if multiple strokes required
-                    overlay.setGestureStrokeType(1);
-                else
-                    overlay.setGestureStrokeType(0);
-            }
+        if (predictions.get(0).toString().equals(letterName.getString(i))) {
+            successAttempt++;
         }
+        //after exceeding attempts allowed, move to next letter
+        if(attempts > attemptsAllowed) {
+
+            /***************************
+             *   Array here
+             *
+             * **************************/
+            results.incrementIndex(i, successAttempt);
+            Log.v("value of arrayList", results + "");
+            i++;
+            attempts = 0;
+            successAttempt=0;
+        }
+
+        if (i == currentLetter.length())
+            i = 0;              // go back to index first letter, just used for testing
+
+        currentImage.setImageDrawable(currentLetter.getDrawable(i));
+
+        if(letterName.getString(i).equals("a") || letterName.getString(i).equals("p") || letterName.getString(i).equals("t") || letterName.getString(i).equals("i") || letterName.getString(i).equals("n")) // j, k x, etc                                                       // if multiple strokes required
+            overlay.setGestureStrokeType(1);
+        else
+            overlay.setGestureStrokeType(0);
 
         currentLetter.recycle();  // Set up for garbage collection
         letterName.recycle();
