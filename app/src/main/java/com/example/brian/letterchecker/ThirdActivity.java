@@ -100,6 +100,15 @@ public class ThirdActivity extends Activity implements GestureOverlayView.OnGest
         //conditions to end activity, having this within onGesturePerformed allows students to submit last effort
         if(totalTime > timeAllowed/1000){
             // save totalTime if not exceeding timeAllowed
+
+            /***************************
+             *   FINAL RESULT HERE
+             *
+             * **************************/
+            ArrayList<String> quizResults = results.finalResult();
+
+            Log.v("value of arrayList", quizResults + "");
+
             startActivity(finish);
         }
 
@@ -114,12 +123,7 @@ public class ThirdActivity extends Activity implements GestureOverlayView.OnGest
         //after exceeding attempts allowed, move to next letter
         if(attempts > attemptsAllowed) {
 
-            /***************************
-             *   Array here
-             *
-             * **************************/
             results.incrementIndex(i, successAttempt);
-            Log.v("value of arrayList", results + "");
             i++;
             attempts = 0;
             successAttempt=0;
