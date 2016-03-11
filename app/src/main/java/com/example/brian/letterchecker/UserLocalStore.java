@@ -19,9 +19,6 @@ public class UserLocalStore {
     public void storeUserData(User user) {
         // Edit what is in shared preference by passing in a user
         SharedPreferences.Editor spEditor = userData.edit();
-        spEditor.putString("name", user.name);
-        spEditor.putString("surname", user.surname);
-        spEditor.putString("class", user.sclass);
         spEditor.putString("username", user.username);
         spEditor.putString("password", user.password);
         spEditor.commit();

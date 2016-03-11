@@ -29,7 +29,7 @@ public class BackgroundWorker extends AsyncTask<Void,Void,User> {
     //AlertDialog alertDialog;
     User user;
     String type;
-    ArrayList<String> letters;
+    ArrayList<String> quizResults;
 
     ProgressDialog progressDialog;
 
@@ -48,11 +48,11 @@ public class BackgroundWorker extends AsyncTask<Void,Void,User> {
         progressDialog.show();
     }
     // Second constructor for an array of letters, no progress dialog
-    public BackgroundWorker (String type, User user, Context context, ArrayList<String> letters) {
+    public BackgroundWorker (String type, User user, Context context, ArrayList<String> quizResults) {
         this.type = type;
         this.user = user;
         this.context = context;
-        this.letters = letters;
+        this.quizResults = quizResults;
     }
 
     @Override
@@ -157,9 +157,13 @@ public class BackgroundWorker extends AsyncTask<Void,Void,User> {
                 // Add in date to start of string
                 String date = new SimpleDateFormat("dd-MM-yyyy").format(new Date());
                 stringBuilder.append(URLEncoder.encode("date", "UTF-8")+"="+URLEncoder.encode(date,"UTF-8"));
-                for(int i = 0; i < letters.size()-1; i = i+2)
+                String username = user.username;
+                stringBuilder.append(URLEncoder.encode("username", "UTF-8")+"="+URLEncoder.encode(username,"UTF-8"));
+                for(int i = 0; i < quizResults.size()-1; i = i+2)
                 {
-                    stringBuilder.append(URLEncoder.encode(""+letters.get(i),"UTF-8")+"="+URLEncoder.encode(letters.get(i+1),"UTF-8"));
+                    stringBuilder.append(URLEncoder.encode(""+quizResults.get(i),"UTF-8")+"="+URLEncoder.encode(quizResults.get(i+1),"UTF-8"));
+                    System.out.println("letter: " + quizResults.get(i));
+                    System.out.println("attempt: " + quizResults.get(i+1));
                     stringBuilder.append("&");
                 }
                 // Remove the last &
@@ -183,7 +187,7 @@ public class BackgroundWorker extends AsyncTask<Void,Void,User> {
                 bufferedReader.close();
                 inputStream.close();
                 httpURLConnection.disconnect();
-                System.out.println(result);
+                //System.out.println(result);
                 if(!result.equals("Insert successful")) {
                     user = null;
                 }
@@ -209,7 +213,7 @@ public class BackgroundWorker extends AsyncTask<Void,Void,User> {
         // Call the AsyncResponse to send the user back to another class
         delegate.processFinish(returnUser);
         super.onPostExecute(returnUser);
-        progressDialog.dismiss();
+        //progressDialog.dismiss();
     }
 
     @Override

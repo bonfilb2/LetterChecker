@@ -2,6 +2,7 @@ package com.example.brian.letterchecker;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.content.res.TypedArray;
 import android.gesture.Gesture;
@@ -13,6 +14,7 @@ import android.graphics.drawable.AnimationDrawable;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.SystemClock;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
@@ -27,7 +29,7 @@ import java.util.TimerTask;
 /**
  * Created by Brian on 22/02/2016.
  */
-public class ThirdActivity extends Activity implements GestureOverlayView.OnGesturePerformedListener {
+public class ThirdActivity extends Activity implements GestureOverlayView.OnGesturePerformedListener, AsyncResponse {
 
     private GestureLibrary listOfLetters; // library of gestures to check, found in res/raw
     private int i = 0;
@@ -52,7 +54,7 @@ public class ThirdActivity extends Activity implements GestureOverlayView.OnGest
         finish = new Intent (this,MainActivity.class);  // go back to menu after condition
         TypedArray ta = getResources().obtainTypedArray(R.array.alphabetId);
         results =new resultHolder(ta);
-        ta.recycle();
+        //ta.recycle();
 
         listOfLetters = GestureLibraries.fromRawResource(this, R.raw.gesture); //abc is the file containing gestures
         if (!listOfLetters.load()) {    //if you can't load the file, exit
@@ -109,7 +111,18 @@ public class ThirdActivity extends Activity implements GestureOverlayView.OnGest
 
             Log.v("value of arrayList", quizResults + "");
 
-            startActivity(finish);
+            String type = "quiz";
+
+            SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+            String username = sharedPreferences.getString("username", "");
+            String password = sharedPreferences.getString("password", "");
+
+            User user = new User(username, password);
+
+            // Asynctask for server requests
+            BackgroundWorker backgroundWorker = new BackgroundWorker(type, user, this, quizResults);
+            backgroundWorker.delegate = this;
+            backgroundWorker.execute();
         }
 
         Log.v("attempts allowed : ", + attemptsAllowed + " attempts made: " + attempts);
@@ -139,7 +152,13 @@ public class ThirdActivity extends Activity implements GestureOverlayView.OnGest
         else
             overlay.setGestureStrokeType(0);
 
-        currentLetter.recycle();  // Set up for garbage collection
-        letterName.recycle();
+        //currentLetter.recycle();  // Set up for garbage collection
+        //letterName.recycle();
+    }
+
+    @Override
+    public void processFinish(User returnUser) {
+        // if returnUser == null something failed
+        startActivity(finish);
     }
 }

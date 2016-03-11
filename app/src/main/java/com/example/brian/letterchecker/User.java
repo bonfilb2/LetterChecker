@@ -25,7 +25,4 @@ public class User {
         this.surname = "";
     }
 
-    public User(ArrayList<String> letters) {
-
-    }
 }
