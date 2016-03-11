@@ -52,7 +52,6 @@ public class ThirdActivity extends Activity implements GestureOverlayView.OnGest
         finish = new Intent (this,MainActivity.class);  // go back to menu after condition
         TypedArray ta = getResources().obtainTypedArray(R.array.alphabetId);
         results =new resultHolder(ta);
-        ta.recycle();
 
         listOfLetters = GestureLibraries.fromRawResource(this, R.raw.gesture); //abc is the file containing gestures
         if (!listOfLetters.load()) {    //if you can't load the file, exit
