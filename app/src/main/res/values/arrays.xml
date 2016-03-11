@@ -1,22 +1,20 @@
 <resources>
     <array name="alphabet">
-        <item>@drawable/g</item>
+        <item>@drawable/s</item>
         <item>@drawable/a</item>
         <item>@drawable/t</item>
-        <item>@drawable/p</item>
-        <item>@drawable/s</item>
-        <item>@drawable/n</item>
         <item>@drawable/i</item>
+        <item>@drawable/p</item>
+        <item>@drawable/n</item>
 
 
     </array>
     <array name="alphabetId">
-        <item>"g"</item>
+        <item>"s"</item>
         <item>"a"</item>
         <item>"t"</item>
-        <item>"p"</item>
-        <item>"s"</item>
-        <item>"n"</item>
         <item>"i"</item>
+        <item>"p"</item>
+        <item>"n"</item>
     </array>
 </resources>
