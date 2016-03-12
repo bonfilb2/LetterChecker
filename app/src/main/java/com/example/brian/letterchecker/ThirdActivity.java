@@ -137,7 +137,7 @@ public class ThirdActivity extends Activity implements GestureOverlayView.OnGest
             User user = new User(username, password);
 
             // Asynctask for server requests
-            BackgroundWorker backgroundWorker = new BackgroundWorker(type, user, this, attemptsAllowed, timeAllowed, timeTaken, quizResults);
+            BackgroundWorker backgroundWorker = new BackgroundWorker(type, user, this, attemptsAllowed, timeAllowed/1000, totalTime, quizResults);
             backgroundWorker.delegate = this;
             backgroundWorker.execute();
         }
