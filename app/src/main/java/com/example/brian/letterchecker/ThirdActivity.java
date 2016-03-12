@@ -113,14 +113,15 @@ public class ThirdActivity extends Activity implements GestureOverlayView.OnGest
 
             String type = "quiz";
 
-            SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+            SharedPreferences sharedPreferences = getSharedPreferences("userDetails", 0);
             String username = sharedPreferences.getString("username", "");
             String password = sharedPreferences.getString("password", "");
+            System.out.println("user: " + username +" password: " + password);
 
             User user = new User(username, password);
 
             // Asynctask for server requests
-            BackgroundWorker backgroundWorker = new BackgroundWorker(type, user, this, quizResults);
+            BackgroundWorker backgroundWorker = new BackgroundWorker(type, user, this, attemptsAllowed, timeAllowed, timeTaken, quizResults);
             backgroundWorker.delegate = this;
             backgroundWorker.execute();
         }

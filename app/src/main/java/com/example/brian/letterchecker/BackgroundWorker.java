@@ -29,6 +29,9 @@ public class BackgroundWorker extends AsyncTask<Void,Void,User> {
     //AlertDialog alertDialog;
     User user;
     String type;
+    int attemptsAllowed;
+    long timeTaken;
+    long timeAllowed;
     ArrayList<String> quizResults;
 
     ProgressDialog progressDialog;
@@ -48,10 +51,13 @@ public class BackgroundWorker extends AsyncTask<Void,Void,User> {
         progressDialog.show();
     }
     // Second constructor for an array of letters, no progress dialog
-    public BackgroundWorker (String type, User user, Context context, ArrayList<String> quizResults) {
+    public BackgroundWorker (String type, User user, Context context, int attemptsAllowed, long timeAllowed, long timeTaken, ArrayList<String> quizResults) {
         this.type = type;
         this.user = user;
         this.context = context;
+        this.attemptsAllowed = attemptsAllowed;
+        this.timeAllowed = timeAllowed;
+        this.timeTaken = timeTaken;
         this.quizResults = quizResults;
     }
 
@@ -134,7 +140,6 @@ public class BackgroundWorker extends AsyncTask<Void,Void,User> {
                 inputStream.close();
                 httpURLConnection.disconnect();
                 // Check if php script did not return this message, if it didn't register wasn't a success
-                System.out.println(result);
                 if(!result.equals("Insert successful")) {
                     user = null;
                 }
@@ -157,13 +162,19 @@ public class BackgroundWorker extends AsyncTask<Void,Void,User> {
                 // Add in date to start of string
                 String date = new SimpleDateFormat("dd-MM-yyyy").format(new Date());
                 stringBuilder.append(URLEncoder.encode("date", "UTF-8")+"="+URLEncoder.encode(date,"UTF-8"));
+                stringBuilder.append("&");
                 String username = user.username;
-                stringBuilder.append(URLEncoder.encode("username", "UTF-8")+"="+URLEncoder.encode(username,"UTF-8"));
+                stringBuilder.append(URLEncoder.encode("username", "UTF-8") + "=" + URLEncoder.encode(username,"UTF-8"));
+                stringBuilder.append("&");
+                stringBuilder.append(URLEncoder.encode("attempts", "UTF-8") + "=" + URLEncoder.encode(""+attemptsAllowed, "UTF-8"));
+                stringBuilder.append("&");
+                stringBuilder.append(URLEncoder.encode("time", "UTF-8") + "=" + URLEncoder.encode(""+timeAllowed, "UTF-8"));
+                stringBuilder.append("&");
+                stringBuilder.append(URLEncoder.encode("time_taken", "UTF-8") + "=" + URLEncoder.encode(""+timeTaken, "UTF-8"));
+                stringBuilder.append("&");
                 for(int i = 0; i < quizResults.size()-1; i = i+2)
                 {
-                    stringBuilder.append(URLEncoder.encode(""+quizResults.get(i),"UTF-8")+"="+URLEncoder.encode(quizResults.get(i+1),"UTF-8"));
-                    System.out.println("letter: " + quizResults.get(i));
-                    System.out.println("attempt: " + quizResults.get(i+1));
+                    stringBuilder.append(URLEncoder.encode(quizResults.get(i),"UTF-8")+"="+URLEncoder.encode(quizResults.get(i+1),"UTF-8"));
                     stringBuilder.append("&");
                 }
                 // Remove the last &
@@ -187,7 +198,6 @@ public class BackgroundWorker extends AsyncTask<Void,Void,User> {
                 bufferedReader.close();
                 inputStream.close();
                 httpURLConnection.disconnect();
-                //System.out.println(result);
                 if(!result.equals("Insert successful")) {
                     user = null;
                 }
