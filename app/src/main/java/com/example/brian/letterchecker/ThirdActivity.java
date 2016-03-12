@@ -99,8 +99,24 @@ public class ThirdActivity extends Activity implements GestureOverlayView.OnGest
         Log.v("timeAllowed: ", "" + timeAllowed/1000 + " time taken : " + totalTime);
         //---------------------------------------------------------
 
+        Log.v("attempts allowed : ", + attemptsAllowed + " attempts made: " + attempts);
+
+        attempts++; // gesture is inputted, increase attempts
+
+        //Test whether gesture input is acceptable ----------------
+        if (predictions.get(0).toString().equals(letterName.getString(i))) {
+            successAttempt++;
+        }
+
+        //after exceeding attempts allowed, move to next letter
+        if(attempts > attemptsAllowed) {
+            results.incrementIndex(i, successAttempt);
+            i++;
+            attempts = 0;
+            successAttempt=0;
+        }
         //conditions to end activity, having this within onGesturePerformed allows students to submit last effort
-        if(totalTime > timeAllowed/1000){
+        if(totalTime > timeAllowed/1000 || i == currentLetter.length()){
             // save totalTime if not exceeding timeAllowed
 
             /***************************
@@ -126,25 +142,8 @@ public class ThirdActivity extends Activity implements GestureOverlayView.OnGest
             backgroundWorker.execute();
         }
 
-        Log.v("attempts allowed : ", + attemptsAllowed + " attempts made: " + attempts);
-
-        attempts++; // gesture is inputted, increase attempts
-
-        //Test whether gesture input is acceptable ----------------
-        if (predictions.get(0).toString().equals(letterName.getString(i))) {
-            successAttempt++;
-        }
-        //after exceeding attempts allowed, move to next letter
-        if(attempts > attemptsAllowed) {
-
-            results.incrementIndex(i, successAttempt);
-            i++;
-            attempts = 0;
-            successAttempt=0;
-        }
-
         if (i == currentLetter.length())
-            i = 0;              // go back to index first letter, just used for testing
+            i = 0;
 
         currentImage.setImageDrawable(currentLetter.getDrawable(i));
 
@@ -153,8 +152,6 @@ public class ThirdActivity extends Activity implements GestureOverlayView.OnGest
         else
             overlay.setGestureStrokeType(0);
 
-        //currentLetter.recycle();  // Set up for garbage collection
-        //letterName.recycle();
     }
 
     @Override
