@@ -6,10 +6,18 @@
         <item>@drawable/i</item>
         <item>@drawable/p</item>
         <item>@drawable/n</item>
+        <item>@drawable/blank</item>
+    </array>\>
 
-
+    <array name="prac_alpha">
+        <item>@drawable/s_prac</item>
+        <item>@drawable/a_pract</item>
+        <item>@drawable/t_prac</item>
+        <item>@drawable/i_prac</item>
+        <item>@drawable/p_prac</item>
+        <item>@drawable/n_prac</item>
     </array>
-    
+
     <array name="alphabetId">
         <item>"s"</item>
         <item>"a"</item>
