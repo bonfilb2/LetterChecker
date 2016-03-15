@@ -2,13 +2,14 @@ package com.example.brian.letterchecker;
 
 import android.content.res.TypedArray;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 /**
  * Created by Noel Gallagher on 10-Mar-16.
  * Arraylist which will obtain it's capacity from length of the library of letters
  */
-public class resultHolder {
+public class resultHolder implements Serializable{
     private ArrayList<Integer> temp = new ArrayList();
     private ArrayList<String> results = new ArrayList();
     private TypedArray ta;
@@ -38,8 +39,19 @@ public class resultHolder {
     public ArrayList<String> finalResult(){
         for(int i=0;i<ta.length();i++){
             results.add(ta.getString(i));
-            results.add(""+temp.get(i));
+            results.add("" + temp.get(i));
         }
         return results;
+    }
+
+    public ArrayList<Integer> getPracticeResults(){
+        return(temp);
+    }
+
+    public resultHolder addArrayLists(ArrayList<Integer> al, resultHolder rh){
+        for(int i=0;i<ta.length();i++) {
+            rh.incrementIndex(i, al.get(i));
+        }
+        return rh;
     }
 }
