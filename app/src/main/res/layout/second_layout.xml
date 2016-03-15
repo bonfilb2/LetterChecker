@@ -1,50 +1,66 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.gesture.GestureOverlayView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:id="@+id/gesturesOverlay"
-    android:layout_weight=".5">
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
 
-    <!--  layout_weight currently being used to determine size of drawable space   -->
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:background="@mipmap/a"
-        android:id="@+id/secondLay"
-        android:orientation="vertical">-->
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:layout_gravity="center">
 
+        <android.gesture.GestureOverlayView
+            android:orientation="vertical"
+            android:layout_gravity="center"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/gesturesOverlay"
+            android:gestureColor ="#00FF00"
+            android:uncertainGestureColor="#FFFF00"
+            android:layout_marginTop="50dp">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/imageView"
+                android:layout_gravity="center"
+                android:src="@drawable/s"/>
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/imageResult"
+                android:layout_gravity="center"/>
+        </android.gesture.GestureOverlayView>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="bottom">
+            <Button
+                android:layout_width="200dp"
+                android:layout_height="200dp"
+                android:id="@+id/button"
+                android:layout_gravity="left"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:layout_marginLeft="50dp"
+                android:layout_marginBottom="50dp" />
+
+            <Button
+                android:layout_width="200dp"
+                android:layout_height="200dp"
+                android:id="@+id/button2"
+                android:layout_gravity="right"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentEnd="true"
+                android:layout_marginRight="50dp"
+                android:layout_marginBottom="50dp" />
+
+        </RelativeLayout>
     </LinearLayout>
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight=".5"
-        android:orientation="vertical"/>
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="Draw the letter"
-        android:id="@+id/textView2"
-        android:layout_gravity="center_horizontal"
-        android:textColor="@color/colorPrimaryDark"/>
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="g"
-        android:id="@+id/textView4"
-        android:layout_gravity="center_horizontal"
-        android:textColor="@color/colorPrimaryDark"/>
-
-
-    <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/imageView"
-        android:layout_gravity="center"
-        android:src="@drawable/s"/>
-
-</android.gesture.GestureOverlayView>
+</RelativeLayout>
