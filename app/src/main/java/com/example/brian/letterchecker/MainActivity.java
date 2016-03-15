@@ -29,7 +29,7 @@ public class MainActivity extends AppCompatActivity {
 
         switch(v.getId()){
             case R.id.secondActivityBtn:
-                startActivity(new Intent(this, SecondActivity.class));
+                startActivity(new Intent(this, LetterMenu.class));
                 break;
             case R.id.thirdActivityBtn:
                 startActivity(new Intent(this, QuizMode.class));
