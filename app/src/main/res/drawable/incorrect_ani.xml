@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<animation-list xmlns:android="http://schemas.android.com/apk/res/android"
+    android:oneshot="true"
+    android:fillAfter="true">
+    <item android:drawable="@drawable/incorrect_1" android:duration="5" />
+    <item android:drawable="@drawable/incorrect_2" android:duration="5" />
+    <item android:drawable="@drawable/incorrect_3" android:duration="5" />
+    <item android:drawable="@drawable/incorrect_4" android:duration="5" />
+    <item android:drawable="@drawable/incorrect_5" android:duration="5" />
+    <item android:drawable="@drawable/incorrect_6" android:duration="5" />
+    <item android:drawable="@drawable/incorrect_7" android:duration="5" />
+    <item android:drawable="@drawable/incorrect_8" android:duration="5" />
+    <item android:drawable="@drawable/incorrect_9" android:duration="5" />
+    <item android:drawable="@drawable/incorrect_10" android:duration="5" />
+    <item android:drawable="@drawable/incorrect_11" android:duration="5" />
+    <item android:drawable="@drawable/incorrect_12" android:duration="5" />
+</animation-list>
