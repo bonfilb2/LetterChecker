@@ -136,10 +136,10 @@ public class ThirdActivity extends Activity implements GestureOverlayView.OnGest
         Log.v("Time since start: ", "" + totalTime);
         //---------------------------------------------------------
 
-        Log.v("attempts allowed : ", + attemptsAllowed + " attempts made: " + attempts);
-
         attempts++; // gesture is inputted, increase attempts
-
+        
+        Log.v("attempts allowed : ", + attemptsAllowed + " attempts made: " + attempts);
+        
         //Test whether gesture input is acceptable ----------------
         if (predictions.get(0).toString().equals(letterName.getString(i))) {        // does the most probable input match the expected?
             successAttempt++;   // if so, success 
@@ -147,14 +147,15 @@ public class ThirdActivity extends Activity implements GestureOverlayView.OnGest
         }
         else
             currentGestureInput=false;
-
+        
         //after exceeding attempts allowed, move to next letter
-        if(attempts > attemptsAllowed) {
+        if(attempts => attemptsAllowed) {
             results.incrementIndex(i, successAttempt);
             i++;        // move to next letter 
             attempts = 0;   // reset for next letter
             successAttempt=0;   // reset for next letter 
         }
+        
         //conditions to end activity, having this within onGesturePerformed allows students to submit last effort
         if(totalTime > timeAllowed/1000 || i == letterName.length()){
             // save totalTime if not exceeding timeAllowed
