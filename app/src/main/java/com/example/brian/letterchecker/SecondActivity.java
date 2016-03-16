@@ -97,43 +97,57 @@ public class SecondActivity extends Activity implements GestureOverlayView.OnGes
         if(result) {
             img.setBackgroundResource(R.drawable.correct_ani);
             finish = new Intent(this, LetterMenu.class);
-           // m = MediaPlayer.create(this, R.raw.correct);
+            //m = MediaPlayer.create(this, R.raw.correct);
         }
         else{
             img.setBackgroundResource(R.drawable.incorrect_ani);
             finish = new Intent(this, PracticeModeAnimationScreen.class);
-           // m = MediaPlayer.create(this, R.raw.incorrect);
+            //m = MediaPlayer.create(this, R.raw.incorrect);
         }
 
         finish.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
 
-        AnimationDrawable resultAnimation = (AnimationDrawable) img.getBackground();
+        final AnimationDrawable resultAnimation = (AnimationDrawable) img.getBackground();
         resultAnimation.start();
-        //m.start();
+        m.start();
 
         gestures.removeAllOnGesturePerformedListeners(); // if accidentally draw gesture instead of button press, do not evaluate
 
-        img.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                attempts = practiceAttempts.getPracticeResults();
-                success = practiceSuccess.getPracticeResults();
-                currentLetter.recycle();
-                letterName.recycle();
+            Timer timer = new Timer();
+            TimerTask timerTask = new TimerTask() {
+                @Override
+                public void run() {
+                    resultAnimation.stop();
+                    attempts = practiceAttempts.getPracticeResults();
+                    success = practiceSuccess.getPracticeResults();
+                    currentLetter.recycle();
+                    letterName.recycle();
 
-               // m.release();
+                   // m.release();
+                   // playSound.release();
 
-                img.setVisibility(View.GONE);
-                finish();
-                finish.putExtra("attempts", attempts);
-                finish.putExtra("i", i);
-                finish.putExtra("success", success);
-                startActivity(finish);
-                overridePendingTransition(0,0);
-            }
-        });
+                    // Can only update a view in the thread it was created in.
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            //gestures.clear(true);       // ignore user input if they tried to draw on animation
+                            img.setVisibility(View.INVISIBLE);
+                        }
+                    });
+
+                    finish();
+                    finish.putExtra("attempts", attempts);
+                    finish.putExtra("i", i);
+                    finish.putExtra("success", success);
+                    startActivity(finish);
+                    overridePendingTransition(0,0);
+
+
+                }
+            };
+
+            timer.schedule(timerTask,750); // use value to inc/dec time for animation to appear for
     }
-
 
 
     //when a gesture is made:
