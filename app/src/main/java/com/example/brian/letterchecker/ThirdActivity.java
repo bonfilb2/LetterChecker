@@ -149,7 +149,7 @@ public class ThirdActivity extends Activity implements GestureOverlayView.OnGest
             currentGestureInput=false;
         
         //after exceeding attempts allowed, move to next letter
-        if(attempts => attemptsAllowed) {
+        if(attempts >= attemptsAllowed) {
             results.incrementIndex(i, successAttempt);
             i++;        // move to next letter 
             attempts = 0;   // reset for next letter
