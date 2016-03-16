@@ -116,7 +116,7 @@ public class ThirdActivity extends Activity implements GestureOverlayView.OnGest
             successAttempt=0;
         }
         //conditions to end activity, having this within onGesturePerformed allows students to submit last effort
-        if(totalTime > timeAllowed/1000 || i == letterName.length()){
+        if(totalTime >= timeAllowed/1000 || i == letterName.length()){
             // save totalTime if not exceeding timeAllowed
 
             /***************************
