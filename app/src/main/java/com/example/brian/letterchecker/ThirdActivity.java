@@ -116,7 +116,7 @@ public class ThirdActivity extends Activity implements GestureOverlayView.OnGest
             successAttempt=0;
         }
         //conditions to end activity, having this within onGesturePerformed allows students to submit last effort
-        if(totalTime > timeAllowed/1000 || i == currentLetter.length()){
+        if(totalTime > timeAllowed/1000 || i == letterName.length()){
             // save totalTime if not exceeding timeAllowed
 
             /***************************
@@ -142,7 +142,7 @@ public class ThirdActivity extends Activity implements GestureOverlayView.OnGest
             backgroundWorker.execute();
         }
 
-        if (i == currentLetter.length())
+        if (i == letterName.length())
             i = 0;
 
         currentImage.setImageDrawable(currentLetter.getDrawable(i));
