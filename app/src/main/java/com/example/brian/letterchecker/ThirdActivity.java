@@ -32,40 +32,45 @@ import java.util.TimerTask;
 public class ThirdActivity extends Activity implements GestureOverlayView.OnGesturePerformedListener, AsyncResponse {
 
     private GestureLibrary listOfLetters; // library of gestures to check, found in res/raw
-    private int i = 0;
-    private long time;
-    private long timeTaken;
-    private long timeAllowed = 60000;   //get from teacher
-    private long totalTime;
-    private int attempts;
-    private int attemptsAllowed = 1;    //get from teacher
-    private int successAttempt;
-    private GestureOverlayView gestures;
-    private Intent finish;  // not sure if this is how to end activity?
-    private resultHolder results;
-
+    private int i = 0;                  // start of letter cycle s=0, a=1...
+    private long time;                  // system time, used during calculations
+    private long timeTaken;             // time taken to finish the letter
+    private long timeAllowed = 60000;   // get from teacher
+    private long totalTime;             // total time of the activity since beginning
+    private int attempts;               // the amount of attempts for a letter
+    private int attemptsAllowed = 1;    // get from teacher
+    private int successAttempt;         // increment if input was successful
+    private GestureOverlayView gestures; // transparent overlay for user input
+    private Intent finish;  // the activity to move to when finished
+    private ImageView animationHolder;  // used to display correct/incorrect animations
+    private resultHolder results;       // used to create results at end of activity
+    private boolean currentGestureInput;    // used to determine what animation to show
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.second_layout);
-        getQuizInfo();      //will be called to get info about quiz
+
+        //getQuizInfo();      //will be called to get info about quiz
+
         time = SystemClock.elapsedRealtime();   // get time quiz starts
-        finish = new Intent (this,MainActivity.class);  // go back to menu after condition
-        TypedArray ta = getResources().obtainTypedArray(R.array.alphabetId);
+        finish = new Intent (this,MainActivity.class);  // go back to menu after completion
+
+        TypedArray ta = getResources().obtainTypedArray(R.array.alphabetId);    // pass all letter names for calculating results
         results =new resultHolder(ta);
-        //ta.recycle();
+
+        animationHolder = (ImageView) findViewById(R.id.imageResult);
 
         listOfLetters = GestureLibraries.fromRawResource(this, R.raw.gesture); //abc is the file containing gestures
         if (!listOfLetters.load()) {    //if you can't load the file, exit
             finish();
         }
 
-        gestures = (GestureOverlayView) findViewById(R.id.gesturesOverlay);
+        gestures = (GestureOverlayView) findViewById(R.id.gesturesOverlay); //set gestureoveraly
         gestures.setGestureStrokeAngleThreshold(90.0f);        // otherwise ignores straight lines
         gestures.setFadeOffset(1000);        //to prevent gestures from disappearing too quickly
         gestures.setGestureStrokeLengthThreshold(0.000000001f);        //to allow small dots to be made; ie for letter i or j
-        gestures.addOnGesturePerformedListener(this);
+        gestures.addOnGesturePerformedListener(this);   // listen to gesture input on this overlay 
 
     }
 
@@ -75,28 +80,60 @@ public class ThirdActivity extends Activity implements GestureOverlayView.OnGest
     }
 
 
-    //when a gesture is made:
+    // feedback through animation
+    public void resultAni(boolean result) {
+        if(result) {
+            animationHolder.setBackgroundResource(R.drawable.correct_ani);
+        } else {
+            animationHolder.setBackgroundResource(R.drawable.incorrect_ani);
+        }
+
+
+        final AnimationDrawable resultAnimation = (AnimationDrawable) animationHolder.getBackground();
+        animationHolder.setVisibility(View.VISIBLE);
+        resultAnimation.start();
+
+        // Show animation until completion
+        Timer timer = new Timer();
+        TimerTask timerTask = new TimerTask(){
+            @Override
+            public void run() {
+                resultAnimation.stop();
+
+                // Can only update a view in the thread it was created in.
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        animationHolder.setVisibility(View.INVISIBLE);
+                    }
+                });
+
+            }
+        };
+
+        timer.schedule(timerTask, 750); // how long to wait until animation disappears
+
+    }
+
+
+    //when a gesture is input:
     public void onGesturePerformed(GestureOverlayView overlay, Gesture gesture) {
 
         ArrayList<Prediction> predictions = listOfLetters.recognize(gesture);   //input is tested against entire library of accepted gestures, list ordered by most probable to least
-        Prediction prediction = predictions.get(0); //get first prediction (most probable)
-        Log.v("prediction 1:", " " + predictions.get(0));
-        Log.v("prediction 2:", " " + predictions.get(1));
-        Log.v("value of i:", " " + i);
-
-        //fix this -----------------------------------------------
-        ImageView currentImage = (ImageView) findViewById(R.id.imageView);
-        Resources res = getResources();
-        TypedArray currentLetter = res.obtainTypedArray(R.array.alphabet);    //obtain info from arrays.xml
-        TypedArray letterName = res.obtainTypedArray(R.array.alphabetId); //same as above
-        Log.v("prediction i:", " " + predictions.get(0).toString().equals(letterName.getString(i)));
+        
+        ImageView currentImage = (ImageView) findViewById(R.id.imageView);      // used to display image of letter
+        Resources res = getResources();                                        
+        TypedArray currentLetter = res.obtainTypedArray(R.array.alphabet);    // Used to get the current image
+        TypedArray letterName = res.obtainTypedArray(R.array.alphabetId); // Used to get current letter name
+        Log.v("We expect : ", " " + letterName.getString(i));
+        Log.v("Input evaluated to: ", " " + predictions.get(0).toString());
         //---------------------------------------------------------
 
-        //Sorting out + updating time information  ---------------- need to make method for this
-        timeTaken = SystemClock.elapsedRealtime() - time;
-        time = SystemClock.elapsedRealtime();
-        totalTime = totalTime + timeTaken/1000;             //time in milliseconds divide by 1000 for value in seconds
-        Log.v("timeAllowed: ", "" + timeAllowed/1000 + " time taken : " + totalTime);
+        //Sorting out + updating time information  ---------------- 
+        timeTaken = SystemClock.elapsedRealtime() - time;       // current time - time since last input was made 
+        time = SystemClock.elapsedRealtime();                   // get current time
+        totalTime = totalTime + timeTaken/1000;             // store the total time of the activity 
+        Log.v("Time since start: ", "" + totalTime);
         //---------------------------------------------------------
 
         Log.v("attempts allowed : ", + attemptsAllowed + " attempts made: " + attempts);
@@ -104,19 +141,22 @@ public class ThirdActivity extends Activity implements GestureOverlayView.OnGest
         attempts++; // gesture is inputted, increase attempts
 
         //Test whether gesture input is acceptable ----------------
-        if (predictions.get(0).toString().equals(letterName.getString(i))) {
-            successAttempt++;
+        if (predictions.get(0).toString().equals(letterName.getString(i))) {        // does the most probable input match the expected?
+            successAttempt++;   // if so, success 
+            currentGestureInput=true;
         }
+        else
+            currentGestureInput=false;
 
         //after exceeding attempts allowed, move to next letter
         if(attempts > attemptsAllowed) {
             results.incrementIndex(i, successAttempt);
-            i++;
-            attempts = 0;
-            successAttempt=0;
+            i++;        // move to next letter 
+            attempts = 0;   // reset for next letter
+            successAttempt=0;   // reset for next letter 
         }
         //conditions to end activity, having this within onGesturePerformed allows students to submit last effort
-        if(totalTime >= timeAllowed/1000 || i == letterName.length()){
+        if(totalTime > timeAllowed/1000 || i == letterName.length()){
             // save totalTime if not exceeding timeAllowed
 
             /***************************
@@ -142,16 +182,19 @@ public class ThirdActivity extends Activity implements GestureOverlayView.OnGest
             backgroundWorker.execute();
         }
 
-        if (i == letterName.length())
+        if (i == letterName.length())   // reset index to prevent out of bounds exception
             i = 0;
 
-        currentImage.setImageDrawable(currentLetter.getDrawable(i));
-
+        currentImage.setImageDrawable(currentLetter.getDrawable(i));    // Move to next image
+        
+        //Does next gesture require multiple inputs?
         if(letterName.getString(i).equals("a") || letterName.getString(i).equals("p") || letterName.getString(i).equals("t") || letterName.getString(i).equals("i") || letterName.getString(i).equals("n")) // j, k x, etc                                                       // if multiple strokes required
             overlay.setGestureStrokeType(1);
         else
             overlay.setGestureStrokeType(0);
-
+        
+        //update UI to provide feedback
+        resultAni(currentGestureInput);
     }
 
     @Override
