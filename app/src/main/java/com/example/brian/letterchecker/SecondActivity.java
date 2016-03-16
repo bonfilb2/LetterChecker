@@ -17,6 +17,8 @@ import android.view.View;
 import android.widget.ImageView;
 import java.util.ArrayList;
 import java.io.File;
+import java.util.Timer;
+import java.util.TimerTask;
 
 
 /**
@@ -109,7 +111,7 @@ public class SecondActivity extends Activity implements GestureOverlayView.OnGes
 
         final AnimationDrawable resultAnimation = (AnimationDrawable) img.getBackground();
         resultAnimation.start();
-        m.start();
+        //m.start();
 
         gestures.removeAllOnGesturePerformedListeners(); // if accidentally draw gesture instead of button press, do not evaluate
 
