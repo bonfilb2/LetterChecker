@@ -42,6 +42,7 @@ public class SecondActivity extends Activity implements GestureOverlayView.OnGes
     private ArrayList<Integer> attempts;
     private ArrayList<Integer> success;
     //private MediaPlayer m, playSound;
+    private Button backButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,7 +50,7 @@ public class SecondActivity extends Activity implements GestureOverlayView.OnGes
         i = extras.getInt("i");
         attempts = extras.getIntegerArrayList("attempts");
         success = extras.getIntegerArrayList("success");
-
+        backButton = (Button) findViewById(R.id.button3);
         // m = new MediaPlayer();
 
         Log.v("Attempts: ", attempts+"");
@@ -108,13 +109,7 @@ public class SecondActivity extends Activity implements GestureOverlayView.OnGes
             case R.id.button2: {
                 // m.release();
                 // playSound.release();
-                finish = new Intent(this, PracticeModeAnimationScreen.class);
-                finish();
-                finish.putExtra("attempts", attempts);
-                finish.putExtra("i", i);
-                finish.putExtra("success", success);
-                startActivity(finish);
-                overridePendingTransition(0, 0);
+                backToMenu();
                 break;
             }
             case R.id.button3: {
@@ -211,6 +206,20 @@ public class SecondActivity extends Activity implements GestureOverlayView.OnGes
         // m = MediaPlayer.create(this, R.raw.incorrect);
 
         resultAni(result);
+    }
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        backToMenu();
+    }
+    public void backToMenu(){
+        finish = new Intent(this, LetterMenu.class);
+        finish();
+        finish.putExtra("attempts", attempts);
+        finish.putExtra("i", i);
+        finish.putExtra("success", success);
+        startActivity(finish);
+        overridePendingTransition(0, 0);
     }
 
 }
