@@ -2,6 +2,7 @@ package com.example.brian.letterchecker;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -20,7 +21,7 @@ import java.util.ArrayList;
  * http://developer.android.com/guide/topics/ui/layout/gridview.html
  */
 
-public class LetterMenu extends Activity {
+public class LetterMenu extends Activity implements AsyncResponse{
     private Intent practice;
     private ArrayList<Integer> attempts;
     private ArrayList<Integer> success;
@@ -50,5 +51,27 @@ public class LetterMenu extends Activity {
                 startActivity(practice);
             }
         });
+    }
+    @Override
+    public void processFinish(User returnUser) {
+        // Do something with returnedUser
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        // Send data to database after finished with practice
+        String type = "practice";
+
+        SharedPreferences sharedPreferences = getSharedPreferences("userDetails", 0);
+        String username = sharedPreferences.getString("username", "");
+        String password = sharedPreferences.getString("password", "");
+
+        User user = new User(username, password);
+
+        // Asynctask for server requests
+        BackgroundWorker backgroundWorker = new BackgroundWorker(type, user, this, attempts, success);
+        backgroundWorker.delegate = this;
+        backgroundWorker.execute();
     }
 }
