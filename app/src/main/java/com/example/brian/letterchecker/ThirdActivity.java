@@ -11,17 +11,11 @@ import android.gesture.GestureLibrary;
 import android.gesture.GestureOverlayView;
 import android.gesture.Prediction;
 import android.graphics.drawable.AnimationDrawable;
-import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.SystemClock;
-import android.preference.PreferenceManager;
 import android.util.Log;
-import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.TextView;
-
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -125,15 +119,12 @@ public class ThirdActivity extends Activity implements GestureOverlayView.OnGest
         Resources res = getResources();                                        
         TypedArray currentLetter = res.obtainTypedArray(R.array.alphabet);    // Used to get the current image
         TypedArray letterName = res.obtainTypedArray(R.array.alphabetId); // Used to get current letter name
-        Log.v("We expect : ", " " + letterName.getString(i));
-        Log.v("Input evaluated to: ", " " + predictions.get(0).toString());
         //---------------------------------------------------------
 
         //Sorting out + updating time information  ---------------- 
         timeTaken = SystemClock.elapsedRealtime() - time;       // current time - time since last input was made 
         time = SystemClock.elapsedRealtime();                   // get current time
-        totalTime = totalTime + timeTaken/1000;             // store the total time of the activity 
-        Log.v("Time since start: ", "" + totalTime);
+        totalTime = totalTime + timeTaken/1000;             // store the total time of the activity
         //---------------------------------------------------------
 
         attempts++; // gesture is inputted, increase attempts
@@ -166,14 +157,11 @@ public class ThirdActivity extends Activity implements GestureOverlayView.OnGest
              * **************************/
             ArrayList<String> quizResults = results.finalResult();
 
-            Log.v("value of arrayList", quizResults + "");
-
             String type = "quiz";
 
             SharedPreferences sharedPreferences = getSharedPreferences("userDetails", 0);
             String username = sharedPreferences.getString("username", "");
             String password = sharedPreferences.getString("password", "");
-            System.out.println("user: " + username +" password: " + password);
 
             User user = new User(username, password);
 

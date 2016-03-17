@@ -2,6 +2,7 @@ package com.example.brian.letterchecker;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.content.res.TypedArray;
 import android.gesture.Gesture;
@@ -24,7 +25,7 @@ import java.util.TimerTask;
 /**
  * Created by Brian on 22/02/2016.
  */
-public class SecondActivity extends Activity implements GestureOverlayView.OnGesturePerformedListener {
+public class SecondActivity extends Activity implements GestureOverlayView.OnGesturePerformedListener, AsyncResponse {
 
     private GestureLibrary listOfLetters; // library of gestures to check, found in res/raw
     private int i;
@@ -98,14 +99,14 @@ public class SecondActivity extends Activity implements GestureOverlayView.OnGes
     public void resultAni(boolean result) {
         if(result) {
             img.setBackgroundResource(R.drawable.correct_ani);
-            finish = new Intent(this, LetterMenu.class);
             //m = MediaPlayer.create(this, R.raw.correct);
         }
         else{
             img.setBackgroundResource(R.drawable.incorrect_ani);
-            finish = new Intent(this, PracticeModeAnimationScreen.class);
             //m = MediaPlayer.create(this, R.raw.incorrect);
         }
+
+        finish = getIntent();
 
         finish.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
 
@@ -148,7 +149,7 @@ public class SecondActivity extends Activity implements GestureOverlayView.OnGes
                 }
             };
 
-            timer.schedule(timerTask,750); // use value to inc/dec time for animation to appear for
+            timer.schedule(timerTask, 750); // use value to inc/dec time for animation to appear for
     }
 
 
@@ -169,6 +170,29 @@ public class SecondActivity extends Activity implements GestureOverlayView.OnGes
             result = false;
 
         resultAni(result);
+    }
+
+    @Override
+    public void processFinish(User returnUser) {
+        // Do something with returnedUser
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        // Send data to database after finished with practice
+        String type = "practice";
+
+        SharedPreferences sharedPreferences = getSharedPreferences("userDetails", 0);
+        String username = sharedPreferences.getString("username", "");
+        String password = sharedPreferences.getString("password", "");
+
+        User user = new User(username, password);
+
+        // Asynctask for server requests
+        BackgroundWorker backgroundWorker = new BackgroundWorker(type, user, this, attempts, success);
+        backgroundWorker.delegate = this;
+        backgroundWorker.execute();
     }
 
 }
