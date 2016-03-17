@@ -2,7 +2,6 @@ package com.example.brian.letterchecker;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.content.res.TypedArray;
 import android.gesture.Gesture;
@@ -15,6 +14,7 @@ import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import java.util.ArrayList;
 import java.io.File;
@@ -25,7 +25,7 @@ import java.util.TimerTask;
 /**
  * Created by Brian on 22/02/2016.
  */
-public class SecondActivity extends Activity implements GestureOverlayView.OnGesturePerformedListener, AsyncResponse {
+public class SecondActivity extends Activity implements GestureOverlayView.OnGesturePerformedListener {
 
     private GestureLibrary listOfLetters; // library of gestures to check, found in res/raw
     private int i;
@@ -34,13 +34,14 @@ public class SecondActivity extends Activity implements GestureOverlayView.OnGes
     private ImageView img;
     private ImageView currentImage;
     private TypedArray currentLetter;
+    //private TypedArray sounds;
     private TypedArray letterName;
     private Intent finish;
     private resultHolder practiceAttempts;
     private resultHolder practiceSuccess;
     private ArrayList<Integer> attempts;
     private ArrayList<Integer> success;
-   // private MediaPlayer m;
+    //private MediaPlayer m, playSound;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,7 +50,7 @@ public class SecondActivity extends Activity implements GestureOverlayView.OnGes
         attempts = extras.getIntegerArrayList("attempts");
         success = extras.getIntegerArrayList("success");
 
-       // m = new MediaPlayer();
+        // m = new MediaPlayer();
 
         Log.v("Attempts: ", attempts+"");
         Log.v("Success: ", success+"");
@@ -57,6 +58,9 @@ public class SecondActivity extends Activity implements GestureOverlayView.OnGes
         Resources res = getResources();
         currentLetter = res.obtainTypedArray(R.array.prac_alpha);
         letterName = res.obtainTypedArray(R.array.alphabetId);
+        // sounds = res.obtainTypedArray(R.array.letterSounds);
+
+        //  playSound = MediaPlayer.create(this, sounds.getResourceId(0,0));
 
         practiceAttempts = new resultHolder(letterName);
         practiceSuccess = new resultHolder(letterName);
@@ -96,14 +100,47 @@ public class SecondActivity extends Activity implements GestureOverlayView.OnGes
 
     }
 
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.button:
+                // playSound.start();
+                break;
+            case R.id.button2: {
+                // m.release();
+                // playSound.release();
+                finish = new Intent(this, PracticeModeAnimationScreen.class);
+                finish();
+                finish.putExtra("attempts", attempts);
+                finish.putExtra("i", i);
+                finish.putExtra("success", success);
+                startActivity(finish);
+                overridePendingTransition(0, 0);
+                break;
+            }
+            case R.id.button3: {
+                // m.release();
+                //  playSound.release();
+                finish = new Intent(this, LetterMenu.class);
+                finish();
+                finish.putExtra("attempts", attempts);
+                finish.putExtra("i", i);
+                finish.putExtra("success", success);
+                startActivity(finish);
+                overridePendingTransition(0, 0);
+                break;
+            }
+        }
+    }
+
+
     public void resultAni(boolean result) {
         if(result) {
             img.setBackgroundResource(R.drawable.correct_ani);
-            //m = MediaPlayer.create(this, R.raw.correct);
+            // m = MediaPlayer.create(this, R.raw.correct);
         }
         else{
             img.setBackgroundResource(R.drawable.incorrect_ani);
-            //m = MediaPlayer.create(this, R.raw.incorrect);
+            // m = MediaPlayer.create(this, R.raw.incorrect);
         }
 
         finish = getIntent();
@@ -112,45 +149,48 @@ public class SecondActivity extends Activity implements GestureOverlayView.OnGes
 
         final AnimationDrawable resultAnimation = (AnimationDrawable) img.getBackground();
         resultAnimation.start();
-        //m.start();
+        // m.start();
 
         gestures.removeAllOnGesturePerformedListeners(); // if accidentally draw gesture instead of button press, do not evaluate
 
-            Timer timer = new Timer();
-            TimerTask timerTask = new TimerTask() {
-                @Override
-                public void run() {
-                    resultAnimation.stop();
-                    attempts = practiceAttempts.getPracticeResults();
-                    success = practiceSuccess.getPracticeResults();
-                    currentLetter.recycle();
-                    letterName.recycle();
+        Timer timer = new Timer();
+        TimerTask timerTask = new TimerTask() {
+            @Override
+            public void run() {
+                resultAnimation.stop();
+                attempts = practiceAttempts.getPracticeResults();
+                success = practiceSuccess.getPracticeResults();
+                currentLetter.recycle();
+                letterName.recycle();
 
-                   // m.release();
-                   // playSound.release();
+                //   m.release();
+                //  playSound.release();
 
-                    // Can only update a view in the thread it was created in.
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            //gestures.clear(true);       // ignore user input if they tried to draw on animation
-                            img.setVisibility(View.INVISIBLE);
-                        }
-                    });
+                // Can only update a view in the thread it was created in.
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        //gestures.clear(true);       // ignore user input if they tried to draw on animation
+                        img.setVisibility(View.INVISIBLE);
+                    }
+                });
 
-                    finish();
-                    finish.putExtra("attempts", attempts);
-                    finish.putExtra("i", i);
-                    finish.putExtra("success", success);
-                    startActivity(finish);
-                    overridePendingTransition(0,0);
+                finish();
+                finish.putExtra("attempts", attempts);
+                finish.putExtra("i", i);
+                finish.putExtra("success", success);
+                startActivity(finish);
+                overridePendingTransition(0, 0);
 
 
-                }
-            };
+            }
+        };
 
-            timer.schedule(timerTask, 750); // use value to inc/dec time for animation to appear for
+        timer.schedule(timerTask,750); // use value to inc/dec time for animation to appear for
+
+
     }
+
 
 
     //when a gesture is made:
@@ -168,31 +208,9 @@ public class SecondActivity extends Activity implements GestureOverlayView.OnGes
         }
         else
             result = false;
+        // m = MediaPlayer.create(this, R.raw.incorrect);
 
         resultAni(result);
-    }
-
-    @Override
-    public void processFinish(User returnUser) {
-        // Do something with returnedUser
-    }
-
-    @Override
-    public void onBackPressed() {
-        super.onBackPressed();
-        // Send data to database after finished with practice
-        String type = "practice";
-
-        SharedPreferences sharedPreferences = getSharedPreferences("userDetails", 0);
-        String username = sharedPreferences.getString("username", "");
-        String password = sharedPreferences.getString("password", "");
-
-        User user = new User(username, password);
-
-        // Asynctask for server requests
-        BackgroundWorker backgroundWorker = new BackgroundWorker(type, user, this, attempts, success);
-        backgroundWorker.delegate = this;
-        backgroundWorker.execute();
     }
 
 }
