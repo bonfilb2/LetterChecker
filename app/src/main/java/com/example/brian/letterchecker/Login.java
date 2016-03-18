@@ -53,7 +53,6 @@ public class Login extends AppCompatActivity implements AsyncResponse {
             // Login successful, store username and password in shared preference file
             userLocalStore = new UserLocalStore(this);
             userLocalStore.storeUserData(returnUser);
-            userLocalStore.setUserLoggedIn(true);
             // Move to main menu
             startActivity(new Intent(this, MainActivity.class));
         } else {

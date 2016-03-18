@@ -2,7 +2,6 @@ package com.example.brian.letterchecker;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -12,12 +11,17 @@ import java.util.Date;
 /**
  * Created by Noel Gallagher on 04-Mar-16.
  */
-public class QuizMode extends Activity implements ASResponseGet{
+public class QuizMode extends Activity implements ASResponseGet {
+
+    // Default quiz settings if no quiz activity was set on website
+    int timeAllowed = 120000;
+    int attemptsAllowed = 3;
 
     @Override
     protected void onStart() {
         super.onStart();
 
+        // Get current date to see if there was a quiz activity set
         String date = new SimpleDateFormat("dd-MM-yyyy").format(new Date());
 
         // Asynctask for server requests
@@ -31,12 +35,15 @@ public class QuizMode extends Activity implements ASResponseGet{
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.quiz_layout);
-        Button b = (Button)findViewById(R.id.quiz_start);
+        Button b = (Button) findViewById(R.id.quiz_start);
         b.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent i = new Intent(QuizMode.this,ThirdActivity.class);
-                startActivity(i);
+                Intent intent = new Intent(QuizMode.this, ThirdActivity.class);
+                // Pass into next activity
+                intent.putExtra("timeAllowed", timeAllowed);
+                intent.putExtra("attemptsAllowed", attemptsAllowed);
+                startActivity(intent);
             }
         });
 
@@ -44,7 +51,22 @@ public class QuizMode extends Activity implements ASResponseGet{
 
     @Override
     public void processFinish(String attempt) {
-        // do something with attempt
-        System.out.println("QM: "+attempt);
+        // If returned string from database is not null
+        if (attempt != null) {
+            // Search for "attempts" in string, if comma is reached then stop
+            int att = attempt.indexOf("attempts") + 10;
+            int att_fin = attempt.indexOf(",", att);
+            int attempts = Integer.parseInt(attempt.substring(att, att_fin));
+
+            // Search for "time" in string, if } is reached then stop
+            int tim = attempt.indexOf("time") + 6;
+            int tim_fin = attempt.indexOf("}", tim);
+            int time = Integer.parseInt(attempt.substring(tim, tim_fin));
+
+            // Overwrite defaults with new values gotten from the database
+            timeAllowed = time * 60000;
+            attemptsAllowed = attempts;
+
+        }
     }
 }

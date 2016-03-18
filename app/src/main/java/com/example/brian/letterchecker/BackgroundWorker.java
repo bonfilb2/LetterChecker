@@ -1,10 +1,8 @@
 package com.example.brian.letterchecker;
 
-import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.AsyncTask;
-
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.IOException;
@@ -23,9 +21,14 @@ import java.util.Date;
 /**
  * Created by Brian on 03/03/16.
  */
+
+/**
+ * Portions of this page dealing with http connections was taken from Programming Knowledge blog site, I take no credit for its design.
+ * programmingknowledgeblog.blogspot.ie
+ */
+
 public class BackgroundWorker extends AsyncTask<Void,Void,User> {
     Context context;
-    //AlertDialog alertDialog;
     User user;
     String type;
     int attemptsAllowed;
@@ -109,6 +112,7 @@ public class BackgroundWorker extends AsyncTask<Void,Void,User> {
                     // Set user to null to indicate a failed login
                     user = null;
                 }
+                progressDialog.dismiss();
                 return user;
             } catch (MalformedURLException e) {
                 e.printStackTrace();
@@ -153,6 +157,7 @@ public class BackgroundWorker extends AsyncTask<Void,Void,User> {
                 if (!result.equals("Insert successful")) {
                     user = null;
                 }
+                progressDialog.dismiss();
                 return user;
             } catch (MalformedURLException e) {
                 e.printStackTrace();
@@ -232,14 +237,14 @@ public class BackgroundWorker extends AsyncTask<Void,Void,User> {
                 String username = user.username;
                 stringBuilder.append(URLEncoder.encode("username", "UTF-8") + "=" + URLEncoder.encode(username, "UTF-8"));
                 stringBuilder.append("&");
-                // need variable for this
+                // Get the total number of attempts
                 int total = 0;
                 for (int i = 0; i < attempts.size(); i++) {
                     total = total + attempts.get(i);
                 }
                 stringBuilder.append(URLEncoder.encode("attempts", "UTF-8") + "=" + URLEncoder.encode("" + total, "UTF-8"));
                 stringBuilder.append("&");
-
+                // Letter information
                 stringBuilder.append(URLEncoder.encode("s", "UTF-8") + "=" + URLEncoder.encode("" + attempts.get(0), "UTF-8"));
                 stringBuilder.append("&");
                 stringBuilder.append(URLEncoder.encode("s_success", "UTF-8") + "=" + URLEncoder.encode("" + success.get(0), "UTF-8"));
@@ -294,17 +299,10 @@ public class BackgroundWorker extends AsyncTask<Void,Void,User> {
     }
 
     @Override
-    protected void onPreExecute() {
-        //alertDialog = new AlertDialog.Builder(context).create();
-        //alertDialog.setTitle("Login Status");
-    }
-
-    @Override
     protected void onPostExecute(User returnUser) {
         // Call the AsyncResponse to send the user back to another class
         delegate.processFinish(returnUser);
         super.onPostExecute(returnUser);
-        //progressDialog.dismiss();
     }
 
     @Override

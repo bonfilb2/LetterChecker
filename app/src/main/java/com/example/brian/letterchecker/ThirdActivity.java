@@ -29,10 +29,10 @@ public class ThirdActivity extends Activity implements GestureOverlayView.OnGest
     private int i = 0;                  // start of letter cycle s=0, a=1...
     private long time;                  // system time, used during calculations
     private long timeTaken;             // time taken to finish the letter
-    private long timeAllowed = 60000;   // get from teacher
+    private int timeAllowed;   // get from teacher
     private long totalTime;             // total time of the activity since beginning
     private int attempts;               // the amount of attempts for a letter
-    private int attemptsAllowed = 1;    // get from teacher
+    private int attemptsAllowed;    // get from teacher
     private int successAttempt;         // increment if input was successful
     private GestureOverlayView gestures; // transparent overlay for user input
     private Intent finish;  // the activity to move to when finished
@@ -45,7 +45,10 @@ public class ThirdActivity extends Activity implements GestureOverlayView.OnGest
         super.onCreate(savedInstanceState);
         setContentView(R.layout.second_layout);
 
-        //getQuizInfo();      //will be called to get info about quiz
+        Bundle extras = getIntent().getExtras();
+        timeAllowed = extras.getInt("timeAllowed");
+        attemptsAllowed = extras.getInt("attemptsAllowed");
+
 
         time = SystemClock.elapsedRealtime();   // get time quiz starts
         finish = new Intent (this,MainActivity.class);  // go back to menu after completion
@@ -67,12 +70,6 @@ public class ThirdActivity extends Activity implements GestureOverlayView.OnGest
         gestures.addOnGesturePerformedListener(this);   // listen to gesture input on this overlay 
 
     }
-
-    public void getQuizInfo(){
-        //will get the info for the quiz such as attempts allowed, max time etc
-
-    }
-
 
     // feedback through animation
     public void resultAni(boolean result) {

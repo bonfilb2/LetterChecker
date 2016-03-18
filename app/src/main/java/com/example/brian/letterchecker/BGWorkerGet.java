@@ -1,9 +1,7 @@
 package com.example.brian.letterchecker;
 
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.AsyncTask;
-
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.IOException;
@@ -17,15 +15,19 @@ import java.net.URL;
 import java.net.URLEncoder;
 
 /**
- * Created by Brian on 5/03/16.
+ * Created by Brian on 15/03/16.
  */
+
+/**
+ * Portions of this page dealing with http connections was taken from Programming Knowledge blog site, I take no credit for its design.
+ * programmingknowledgeblog.blogspot.ie
+ */
+
 public class BGWorkerGet extends AsyncTask<Void,Void,String> {
 
     Context context;
     String date;
 
-
-    ProgressDialog progressDialog;
 
     // Create a new ASResponseGet
     public ASResponseGet delegate = null;
@@ -34,11 +36,6 @@ public class BGWorkerGet extends AsyncTask<Void,Void,String> {
         // Constructor takes in the current date and a context
         this.date = date;
         this.context = context;
-        progressDialog = new ProgressDialog(context);
-        progressDialog.setCancelable(false);
-        progressDialog.setTitle("Connecting to server");
-        progressDialog.setMessage("Please wait...");
-        progressDialog.show();
     }
 
     @Override
@@ -53,7 +50,6 @@ public class BGWorkerGet extends AsyncTask<Void,Void,String> {
             OutputStream outputStream = httpURLConnection.getOutputStream();
             BufferedWriter bufferedWriter = new BufferedWriter(new OutputStreamWriter(outputStream, "UTF-8"));
             String post_data = URLEncoder.encode("date", "UTF-8")+"="+URLEncoder.encode(date,"UTF-8");
-            System.out.println("BG post:" + post_data);
             bufferedWriter.write(post_data);
             bufferedWriter.flush();
             bufferedWriter.close();
@@ -66,7 +62,6 @@ public class BGWorkerGet extends AsyncTask<Void,Void,String> {
             while((line = bufferedReader.readLine())!= null) {
                 result += line;
             }
-            System.out.println("BG: "+result);
             bufferedReader.close();
             inputStream.close();
             httpURLConnection.disconnect();
@@ -82,17 +77,10 @@ public class BGWorkerGet extends AsyncTask<Void,Void,String> {
     }
 
     @Override
-    protected void onPreExecute() {
-        //alertDialog = new AlertDialog.Builder(context).create();
-        //alertDialog.setTitle("Login Status");
-    }
-
-    @Override
     protected void onPostExecute(String attempt) {
         // Call the AsyncResponse to send the user back to another class
         delegate.processFinish(attempt);
         super.onPostExecute(attempt);
-        progressDialog.dismiss();
     }
 
     @Override

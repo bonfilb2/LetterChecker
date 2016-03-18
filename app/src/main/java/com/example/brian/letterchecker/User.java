@@ -1,7 +1,5 @@
 package com.example.brian.letterchecker;
 
-import java.util.ArrayList;
-
 /**
  * Created by Brian on 27/02/2016.
  */

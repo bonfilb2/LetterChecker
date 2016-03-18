@@ -24,13 +24,6 @@ public class UserLocalStore {
         spEditor.commit();
     }
 
-    public void setUserLoggedIn(boolean loggedIn) {
-        SharedPreferences.Editor spEditor = userData.edit();
-        // loggedIn is set to true, put in shared preference
-        spEditor.putBoolean("loggedIn", loggedIn);
-        spEditor.commit();
-    }
-
     public boolean isEmpty() {
         // Check if shared preference file contains the username key
         if(userData.contains("username")) {

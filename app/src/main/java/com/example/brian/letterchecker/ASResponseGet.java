@@ -1,9 +1,9 @@
 package com.example.brian.letterchecker;
 
 /**
- * Created by Brian on 05/03/16.
+ * Created by Brian on 15/03/16.
  */
 public interface ASResponseGet {
-    // Used to return a user from BackgroundWorker when it's finished to another class like login or register
+    // Used to return a string from BGWorkerGet when it's finished to QuizMode class
     void processFinish(String attempt);
 }
