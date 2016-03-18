@@ -20,9 +20,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".SecondActivity" />
-        <activity android:name=".ThirdActivity" />
+        <activity android:name=".PracticeMode" />
         <activity android:name=".QuizMode" />
+        <activity android:name=".QuizScreen" />
         <activity android:name=".PracticeModeAnimationScreen" />
         <activity
             android:name=".Login"

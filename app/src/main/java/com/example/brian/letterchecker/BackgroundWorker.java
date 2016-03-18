@@ -54,7 +54,7 @@ public class BackgroundWorker extends AsyncTask<Void,Void,User> {
         progressDialog.setMessage("Please wait...");
         progressDialog.show();
     }
-    // Second constructor (quiz) for an array of letters, no progress dialog
+    // Second constructor (quiz)
     public BackgroundWorker (String type, User user, Context context, int attemptsAllowed, long timeAllowed, long timeTaken, ArrayList<String> quizResults) {
         this.type = type;
         this.user = user;
@@ -64,7 +64,7 @@ public class BackgroundWorker extends AsyncTask<Void,Void,User> {
         this.timeTaken = timeTaken;
         this.quizResults = quizResults;
     }
-    // Third constructor (practice) for
+    // Third constructor (practice)
     public BackgroundWorker (String type, User user, Context context, ArrayList<Integer> attempts, ArrayList<Integer> success) {
         this.type = type;
         this.user = user;

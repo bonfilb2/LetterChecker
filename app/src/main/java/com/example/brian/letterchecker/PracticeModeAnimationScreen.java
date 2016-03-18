@@ -54,7 +54,7 @@ public class PracticeModeAnimationScreen extends Activity {
         AnimationDrawable resultAnimation = (AnimationDrawable) animationHolder.getBackground();
         resultAnimation.start();
 
-        goToPractice = new Intent(this, SecondActivity.class);
+        goToPractice = new Intent(this, PracticeMode.class);
         goToPractice.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
 
 

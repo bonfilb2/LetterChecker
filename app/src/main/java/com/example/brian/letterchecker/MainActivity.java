@@ -32,7 +32,7 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(new Intent(this, LetterMenu.class));
                 break;
             case R.id.thirdActivityBtn:
-                startActivity(new Intent(this, QuizMode.class));
+                startActivity(new Intent(this, QuizScreen.class));
                 break;
             case R.id.btnSettings:
                 startActivity(new Intent(this, Settings.class));

@@ -2,71 +2,190 @@ package com.example.brian.letterchecker;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.res.Resources;
+import android.content.res.TypedArray;
+import android.gesture.Gesture;
+import android.gesture.GestureLibraries;
+import android.gesture.GestureLibrary;
+import android.gesture.GestureOverlayView;
+import android.gesture.Prediction;
+import android.graphics.drawable.AnimationDrawable;
 import android.os.Bundle;
+import android.os.SystemClock;
+import android.util.Log;
 import android.view.View;
-import android.widget.Button;
-import java.text.SimpleDateFormat;
-import java.util.Date;
+import android.widget.ImageView;
+import java.util.ArrayList;
+import java.util.Timer;
+import java.util.TimerTask;
 
 /**
- * Created by Noel Gallagher on 04-Mar-16.
+ * Created by Brian on 22/02/2016.
  */
-public class QuizMode extends Activity implements ASResponseGet {
+public class QuizMode extends Activity implements GestureOverlayView.OnGesturePerformedListener, AsyncResponse {
 
-    // Default quiz settings if no quiz activity was set on website
-    private int timeAllowed = 120000;
-    private int attemptsAllowed = 3;
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-
-        // Get current date to see if there was a quiz activity set
-        String date = new SimpleDateFormat("dd-MM-yyyy").format(new Date());
-
-        // Asynctask for server requests
-        BGWorkerGet bgWorkerGet = new BGWorkerGet(date, this);
-        bgWorkerGet.delegate = this;
-        bgWorkerGet.execute();
-
-    }
+    private GestureLibrary listOfLetters; // library of gestures to check, found in res/raw
+    private int i = 0;                  // start of letter cycle s=0, a=1...
+    private long time;                  // system time, used during calculations
+    private long timeTaken;             // time taken to finish the letter
+    private int timeAllowed;   // get from teacher
+    private long totalTime;             // total time of the activity since beginning
+    private int attempts;               // the amount of attempts for a letter
+    private int attemptsAllowed;    // get from teacher
+    private int successAttempt;         // increment if input was successful
+    private GestureOverlayView gestures; // transparent overlay for user input
+    private Intent finish;  // the activity to move to when finished
+    private ImageView animationHolder;  // used to display correct/incorrect animations
+    private resultHolder results;       // used to create results at end of activity
+    private boolean currentGestureInput;    // used to determine what animation to show
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.quiz_layout);
-        Button b = (Button) findViewById(R.id.quiz_start);
-        b.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(QuizMode.this, ThirdActivity.class);
-                // Pass into next activity
-                intent.putExtra("timeAllowed", timeAllowed);
-                intent.putExtra("attemptsAllowed", attemptsAllowed);
-                startActivity(intent);
-            }
-        });
+        setContentView(R.layout.second_layout);
+
+        Bundle extras = getIntent().getExtras();
+        timeAllowed = extras.getInt("timeAllowed");
+        attemptsAllowed = extras.getInt("attemptsAllowed");
+
+
+        time = SystemClock.elapsedRealtime();   // get time quiz starts
+        finish = new Intent (this,MainActivity.class);  // go back to menu after completion
+
+        TypedArray ta = getResources().obtainTypedArray(R.array.alphabetId);    // pass all letter names for calculating results
+        results =new resultHolder(ta);
+
+        animationHolder = (ImageView) findViewById(R.id.imageResult);
+
+        listOfLetters = GestureLibraries.fromRawResource(this, R.raw.gesture); //abc is the file containing gestures
+        if (!listOfLetters.load()) {    //if you can't load the file, exit
+            finish();
+        }
+
+        gestures = (GestureOverlayView) findViewById(R.id.gesturesOverlay); //set gestureoveraly
+        gestures.setGestureStrokeAngleThreshold(90.0f);        // otherwise ignores straight lines
+        gestures.setFadeOffset(1000);        //to prevent gestures from disappearing too quickly
+        gestures.setGestureStrokeLengthThreshold(0.000000001f);        //to allow small dots to be made; ie for letter i or j
+        gestures.addOnGesturePerformedListener(this);   // listen to gesture input on this overlay 
 
     }
 
-    @Override
-    public void processFinish(String attempt) {
-        // If returned string from database is not null
-        if (attempt != null) {
-            // Search for "attempts" in string, if comma is reached then stop
-            int att = attempt.indexOf("attempts") + 10;
-            int att_fin = attempt.indexOf(",", att);
-            int attempts = Integer.parseInt(attempt.substring(att, att_fin));
-
-            // Search for "time" in string, if } is reached then stop
-            int tim = attempt.indexOf("time") + 6;
-            int tim_fin = attempt.indexOf("}", tim);
-            int time = Integer.parseInt(attempt.substring(tim, tim_fin));
-
-            // Overwrite defaults with new values gotten from the database
-            timeAllowed = time * 60000;
-            attemptsAllowed = attempts;
-
+    // feedback through animation
+    public void resultAni(boolean result) {
+        if(result) {
+            animationHolder.setBackgroundResource(R.drawable.correct_ani);
+        } else {
+            animationHolder.setBackgroundResource(R.drawable.incorrect_ani);
         }
+
+
+        final AnimationDrawable resultAnimation = (AnimationDrawable) animationHolder.getBackground();
+        animationHolder.setVisibility(View.VISIBLE);
+        resultAnimation.start();
+
+        // Show animation until completion
+        Timer timer = new Timer();
+        TimerTask timerTask = new TimerTask(){
+            @Override
+            public void run() {
+                resultAnimation.stop();
+
+                // Can only update a view in the thread it was created in.
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        animationHolder.setVisibility(View.INVISIBLE);
+                    }
+                });
+
+            }
+        };
+
+        timer.schedule(timerTask, 750); // how long to wait until animation disappears
+
+    }
+
+
+    //when a gesture is input:
+    public void onGesturePerformed(GestureOverlayView overlay, Gesture gesture) {
+
+        ArrayList<Prediction> predictions = listOfLetters.recognize(gesture);   //input is tested against entire library of accepted gestures, list ordered by most probable to least
+        
+        ImageView currentImage = (ImageView) findViewById(R.id.imageView);      // used to display image of letter
+        Resources res = getResources();                                        
+        TypedArray currentLetter = res.obtainTypedArray(R.array.alphabet);    // Used to get the current image
+        TypedArray letterName = res.obtainTypedArray(R.array.alphabetId); // Used to get current letter name
+        //---------------------------------------------------------
+
+        //Sorting out + updating time information  ---------------- 
+        timeTaken = SystemClock.elapsedRealtime() - time;       // current time - time since last input was made 
+        time = SystemClock.elapsedRealtime();                   // get current time
+        totalTime = totalTime + timeTaken/1000;             // store the total time of the activity
+        //---------------------------------------------------------
+
+        attempts++; // gesture is inputted, increase attempts
+        
+        Log.v("attempts allowed : ", + attemptsAllowed + " attempts made: " + attempts);
+        
+        //Test whether gesture input is acceptable ----------------
+        if (predictions.get(0).toString().equals(letterName.getString(i))) {        // does the most probable input match the expected?
+            successAttempt++;   // if so, success 
+            currentGestureInput=true;
+        }
+        else
+            currentGestureInput=false;
+        
+        //after exceeding attempts allowed, move to next letter
+        if(attempts >= attemptsAllowed) {
+            results.incrementIndex(i, successAttempt);
+            i++;        // move to next letter 
+            attempts = 0;   // reset for next letter
+            successAttempt=0;   // reset for next letter 
+        }
+        
+        //conditions to end activity, having this within onGesturePerformed allows students to submit last effort
+        if(totalTime > timeAllowed/1000 || i == letterName.length()){
+            // save totalTime if not exceeding timeAllowed
+
+            /***************************
+             *   FINAL RESULT HERE
+             *
+             * **************************/
+            ArrayList<String> quizResults = results.finalResult();
+
+            String type = "quiz";
+
+            SharedPreferences sharedPreferences = getSharedPreferences("userDetails", 0);
+            String username = sharedPreferences.getString("username", "");
+            String password = sharedPreferences.getString("password", "");
+
+            User user = new User(username, password);
+
+            // Asynctask for server requests
+            BackgroundWorker backgroundWorker = new BackgroundWorker(type, user, this, attemptsAllowed, timeAllowed/1000, totalTime, quizResults);
+            backgroundWorker.delegate = this;
+            backgroundWorker.execute();
+        }
+
+        if (i == letterName.length())   // reset index to prevent out of bounds exception
+            i = 0;
+
+        currentImage.setImageDrawable(currentLetter.getDrawable(i));    // Move to next image
+        
+        //Does next gesture require multiple inputs?
+        if(letterName.getString(i).equals("a") || letterName.getString(i).equals("p") || letterName.getString(i).equals("t") || letterName.getString(i).equals("i") || letterName.getString(i).equals("n")) // j, k x, etc                                                       // if multiple strokes required
+            overlay.setGestureStrokeType(1);
+        else
+            overlay.setGestureStrokeType(0);
+        
+        //update UI to provide feedback
+        resultAni(currentGestureInput);
+    }
+
+    @Override
+    public void processFinish(User returnUser) {
+        // if returnUser == null something failed
+        startActivity(finish);
     }
 }

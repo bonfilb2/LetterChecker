@@ -25,7 +25,7 @@ import java.util.TimerTask;
 /**
  * Created by Brian on 22/02/2016.
  */
-public class SecondActivity extends Activity implements GestureOverlayView.OnGesturePerformedListener {
+public class PracticeMode extends Activity implements GestureOverlayView.OnGesturePerformedListener {
 
     private GestureLibrary listOfLetters; // library of gestures to check, found in res/raw
     private int i;
