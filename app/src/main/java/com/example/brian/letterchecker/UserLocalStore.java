@@ -9,7 +9,7 @@ import android.content.SharedPreferences;
 public class UserLocalStore {
 
     public static final String SP_NAME = "userDetails";
-    SharedPreferences userData;
+    private SharedPreferences userData;
 
     public UserLocalStore(Context context) {
         // File where shared preference data comes from

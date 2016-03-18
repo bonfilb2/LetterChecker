@@ -29,16 +29,16 @@ import java.util.Date;
 
 public class BackgroundWorker extends AsyncTask<Void,Void,User> {
     Context context;
-    User user;
-    String type;
-    int attemptsAllowed;
-    long timeTaken;
-    long timeAllowed;
-    ArrayList<String> quizResults;
-    ArrayList<Integer> attempts;
-    ArrayList<Integer> success;
+    private User user;
+    private String type;
+    private int attemptsAllowed;
+    private long timeTaken;
+    private long timeAllowed;
+    private ArrayList<String> quizResults;
+    private ArrayList<Integer> attempts;
+    private ArrayList<Integer> success;
 
-    ProgressDialog progressDialog;
+    private ProgressDialog progressDialog;
 
     // Create a new AsyncResponse
     public AsyncResponse delegate = null;

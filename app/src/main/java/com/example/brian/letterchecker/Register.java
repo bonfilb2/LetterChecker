@@ -11,7 +11,7 @@ import android.widget.EditText;
 public class Register extends AppCompatActivity implements AsyncResponse {
 
     Button btnRegister;
-    EditText etName, etSurname, etClass, etUsername, etPassword;
+    private EditText etName, etSurname, etClass, etUsername, etPassword;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

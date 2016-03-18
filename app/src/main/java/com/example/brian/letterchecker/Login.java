@@ -11,9 +11,9 @@ import android.widget.EditText;
 public class Login extends AppCompatActivity implements AsyncResponse {
 
     Button btnLogin;
-    EditText etUsername, etPassword;
+    private EditText etUsername, etPassword;
 
-    UserLocalStore userLocalStore;
+    private UserLocalStore userLocalStore;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

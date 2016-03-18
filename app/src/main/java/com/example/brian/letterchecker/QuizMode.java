@@ -14,8 +14,8 @@ import java.util.Date;
 public class QuizMode extends Activity implements ASResponseGet {
 
     // Default quiz settings if no quiz activity was set on website
-    int timeAllowed = 120000;
-    int attemptsAllowed = 3;
+    private int timeAllowed = 120000;
+    private int attemptsAllowed = 3;
 
     @Override
     protected void onStart() {

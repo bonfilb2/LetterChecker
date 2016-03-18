@@ -26,7 +26,7 @@ import java.net.URLEncoder;
 public class BGWorkerGet extends AsyncTask<Void,Void,String> {
 
     Context context;
-    String date;
+    private String date;
 
 
     // Create a new ASResponseGet
