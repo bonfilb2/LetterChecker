@@ -34,14 +34,14 @@ public class PracticeMode extends Activity implements GestureOverlayView.OnGestu
     private ImageView img;
     private ImageView currentImage;
     private TypedArray currentLetter;
-    //private TypedArray sounds;
+    private TypedArray sounds;
     private TypedArray letterName;
     private Intent finish;
     private resultHolder practiceAttempts;
     private resultHolder practiceSuccess;
     private ArrayList<Integer> attempts;
     private ArrayList<Integer> success;
-    //private MediaPlayer m, playSound;
+    private MediaPlayer m, playSound;
     private Button backButton;
 
     @Override
@@ -51,7 +51,7 @@ public class PracticeMode extends Activity implements GestureOverlayView.OnGestu
         attempts = extras.getIntegerArrayList("attempts");
         success = extras.getIntegerArrayList("success");
         backButton = (Button) findViewById(R.id.button3);
-        // m = new MediaPlayer();
+        m = new MediaPlayer();
 
         Log.v("Attempts: ", attempts+"");
         Log.v("Success: ", success+"");
@@ -59,9 +59,9 @@ public class PracticeMode extends Activity implements GestureOverlayView.OnGestu
         Resources res = getResources();
         currentLetter = res.obtainTypedArray(R.array.prac_alpha);
         letterName = res.obtainTypedArray(R.array.alphabetId);
-        // sounds = res.obtainTypedArray(R.array.letterSounds);
+        sounds = res.obtainTypedArray(R.array.letterSounds);
 
-        //  playSound = MediaPlayer.create(this, sounds.getResourceId(0,0));
+        playSound = MediaPlayer.create(this, sounds.getResourceId(i,0));
 
         practiceAttempts = new resultHolder(letterName);
         practiceSuccess = new resultHolder(letterName);
@@ -104,11 +104,11 @@ public class PracticeMode extends Activity implements GestureOverlayView.OnGestu
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.button:
-                // playSound.start();
+                playSound.start();
                 break;
             case R.id.button2: {
-                // m.release();
-                // playSound.release();
+                m.release();
+                playSound.release();
                 finish = new Intent(this, LetterMenu.class);
                 finish();
                 finish.putExtra("attempts", attempts);
@@ -120,8 +120,8 @@ public class PracticeMode extends Activity implements GestureOverlayView.OnGestu
             }
             case R.id.button3: {
                 backToMenu();
-                // m.release();
-                //  playSound.release();
+                m.release();
+                playSound.release();
                 break;
             }
         }
@@ -131,11 +131,9 @@ public class PracticeMode extends Activity implements GestureOverlayView.OnGestu
     public void resultAni(boolean result) {
         if(result) {
             img.setBackgroundResource(R.drawable.correct_ani);
-            // m = MediaPlayer.create(this, R.raw.correct);
         }
         else{
             img.setBackgroundResource(R.drawable.incorrect_ani);
-            // m = MediaPlayer.create(this, R.raw.incorrect);
         }
 
         finish = getIntent();
@@ -144,7 +142,7 @@ public class PracticeMode extends Activity implements GestureOverlayView.OnGestu
 
         final AnimationDrawable resultAnimation = (AnimationDrawable) img.getBackground();
         resultAnimation.start();
-        // m.start();
+        m.start();
 
         gestures.removeAllOnGesturePerformedListeners(); // if accidentally draw gesture instead of button press, do not evaluate
 
@@ -200,10 +198,12 @@ public class PracticeMode extends Activity implements GestureOverlayView.OnGestu
         if (predictions.get(0).toString().equals(letterName.getString(i)) && prediction.score > 1.0) {      // if top prediction matches what you're looking for
             result = true;
             practiceSuccess.incrementIndex(i, 1);
+            m = MediaPlayer.create(this, R.raw.correct);
         }
-        else
+        else {
             result = false;
-        // m = MediaPlayer.create(this, R.raw.incorrect);
+            m = MediaPlayer.create(this, R.raw.incorrect);
+        }
 
         resultAni(result);
     }
@@ -213,6 +213,8 @@ public class PracticeMode extends Activity implements GestureOverlayView.OnGestu
         backToMenu();
     }
     public void backToMenu(){
+        m.release();
+        playSound.release();
         finish = new Intent(this, LetterMenu.class);
         finish();
         finish.putExtra("attempts", attempts);
