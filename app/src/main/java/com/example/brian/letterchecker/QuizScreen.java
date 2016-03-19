@@ -22,7 +22,7 @@ public class QuizScreen extends Activity implements ASResponseGet {
         super.onStart();
 
         // Get current date to see if there was a quiz activity set
-        String date = new SimpleDateFormat("dd-MM-yyyy").format(new Date());
+        String date = new SimpleDateFormat("yyyy-MM-dd").format(new Date());
 
         // Asynctask for server requests
         BGWorkerGet bgWorkerGet = new BGWorkerGet(date, this);
@@ -51,8 +51,8 @@ public class QuizScreen extends Activity implements ASResponseGet {
 
     @Override
     public void processFinish(String attempt) {
-        // If returned string from database is not null
-        if (attempt != null) {
+        // If returned string from database is not empty (no activity set)
+        if (attempt.length() > 4) {
             // Search for "attempts" in string, if comma is reached then stop
             int att = attempt.indexOf("attempts") + 10;
             int att_fin = attempt.indexOf(",", att);
