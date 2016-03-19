@@ -164,7 +164,7 @@ public class PracticeMode extends Activity implements GestureOverlayView.OnGestu
                     @Override
                     public void run() {
                         //gestures.clear(true);       // ignore user input if they tried to draw on animation
-                        img.setVisibility(View.INVISIBLE);
+                        img.setVisibility(View.GONE);
                     }
                 });
 
