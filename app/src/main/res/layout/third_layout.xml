@@ -16,11 +16,7 @@
             android:gestureColor ="#00FF00"
             android:uncertainGestureColor="#FFFF00">
 
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/imageResult"
-                android:layout_gravity="center"/>
+
 
 
             <ImageView
@@ -29,6 +25,11 @@
                 android:id="@+id/imageView"
                 android:layout_gravity="center"
                 android:src="@drawable/s" />
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/imageResult"
+                android:layout_gravity="center"/>
          </android.gesture.GestureOverlayView>
 
     </LinearLayout>
