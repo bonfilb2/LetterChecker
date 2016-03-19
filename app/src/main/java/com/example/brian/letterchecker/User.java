@@ -8,6 +8,7 @@ public class User {
     String name, surname, sclass, username, password;
 
     public User (String name, String surname, String sclass, String username, String password) {
+        // Constructor called when registering
         this.name = name;
         this.surname = surname;
         this.sclass = sclass;

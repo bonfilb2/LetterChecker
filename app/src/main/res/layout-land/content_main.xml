@@ -13,36 +13,34 @@
     tools:showIn="@layout/activity_main">
 
     <ImageButton
-        android:layout_width="180dp"
-        android:layout_height="180dp"
+        android:layout_width="360dp"
+        android:layout_height="360dp"
         android:background="@drawable/button_states"
-        android:src="@drawable/practice_t"
+        android:src="@drawable/practice_large"
         android:id="@+id/secondActivityBtn"
         android:onClick="moveActivity"
-        android:layout_marginLeft="60dp"
-        android:layout_marginStart="60dp"
         android:layout_alignTop="@+id/thirdActivityBtn"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
+        android:layout_toLeftOf="@+id/thirdActivityBtn"
+        android:layout_toStartOf="@+id/thirdActivityBtn" />
 
     <ImageButton
-        android:layout_width="180dp"
-        android:layout_height="180dp"
+        android:layout_width="360dp"
+        android:layout_height="360dp"
         android:background="@drawable/button_states"
-        android:src="@drawable/quiz_1"
+        android:src="@drawable/quiz_large"
         android:id="@+id/thirdActivityBtn"
         android:onClick="moveActivity"
-        android:layout_marginLeft="45dp"
-        android:layout_marginStart="45dp"
+        android:layout_marginRight="85dp"
+        android:layout_marginEnd="85dp"
         android:layout_centerVertical="true"
-        android:layout_toRightOf="@+id/secondActivityBtn"
-        android:layout_toEndOf="@+id/secondActivityBtn" />
+        android:layout_toLeftOf="@+id/btnSettings"
+        android:layout_toStartOf="@+id/btnSettings" />
 
     <ImageButton
-        android:layout_width="65dp"
-        android:layout_height="65dp"
+        android:layout_width="130dp"
+        android:layout_height="130dp"
         android:background="@drawable/button_states"
-        android:src="@drawable/settings_btn"
+        android:src="@drawable/settings_btn_large"
         android:id="@+id/btnSettings"
         android:onClick="moveActivity"
         android:layout_alignParentBottom="true"

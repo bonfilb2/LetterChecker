@@ -13,10 +13,10 @@
     tools:showIn="@layout/activity_main">
 
     <ImageButton
-        android:layout_width="180dp"
-        android:layout_height="180dp"
+        android:layout_width="360dp"
+        android:layout_height="360dp"
         android:background="@drawable/button_states"
-        android:src="@drawable/practice_t"
+        android:src="@drawable/practice_large"
         android:id="@+id/secondActivityBtn"
         android:onClick="moveActivity"
         android:layout_marginTop="38dp"
@@ -24,10 +24,10 @@
         android:layout_centerHorizontal="true" />
 
     <ImageButton
-        android:layout_width="180dp"
-        android:layout_height="180dp"
+        android:layout_width="360dp"
+        android:layout_height="360dp"
         android:background="@drawable/button_states"
-        android:src="@drawable/quiz_1"
+        android:src="@drawable/quiz_large"
         android:id="@+id/thirdActivityBtn"
         android:onClick="moveActivity"
         android:layout_below="@+id/secondActivityBtn"
@@ -36,10 +36,10 @@
         android:layout_marginTop="35dp" />
 
     <ImageButton
-        android:layout_width="65dp"
-        android:layout_height="65dp"
+        android:layout_width="130dp"
+        android:layout_height="130dp"
         android:background="@drawable/button_states"
-        android:src="@drawable/settings_btn"
+        android:src="@drawable/settings_btn_large"
         android:id="@+id/btnSettings"
         android:onClick="moveActivity"
         android:layout_alignParentBottom="true"

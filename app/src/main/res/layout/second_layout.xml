@@ -38,31 +38,36 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_gravity="bottom">
-            <Button
+            <ImageButton
                 android:layout_width="200dp"
                 android:layout_height="200dp"
+                android:background="@drawable/button_states"
+                android:src="@drawable/voice_large"
                 android:id="@+id/button"
-                android:text="play sound"
                 android:layout_gravity="left"
-                android:layout_alignParentTop="true"
-                android:layout_alignParentLeft="true"
-                android:layout_alignParentStart="true"
-                android:onClick="onClick"/>
+                android:onClick="onClick"
+                android:layout_alignParentBottom="true"
+                android:layout_toLeftOf="@+id/button2"
+                android:layout_toStartOf="@+id/button2" />
 
-            <Button
+            <ImageButton
                 android:layout_width="200dp"
                 android:layout_height="200dp"
+                android:background="@drawable/button_states"
+                android:src="@drawable/ani_pic_large"
                 android:id="@+id/button2"
                 android:text="help"
                 android:layout_gravity="right"
-                android:layout_alignParentTop="true"
+                android:onClick="onClick"
+                android:layout_alignParentBottom="true"
                 android:layout_alignParentRight="true"
-                android:layout_alignParentEnd="true"
-                android:onClick="onClick"/>
+                android:layout_alignParentEnd="true" />
 
-            <Button
+            <ImageButton
                 android:layout_width="200dp"
                 android:layout_height="200dp"
+                android:background="@drawable/button_states"
+                android:src="@drawable/back_menu_large"
                 android:text="to menu"
                 android:id="@+id/button3"
                 android:layout_alignParentBottom="true"
