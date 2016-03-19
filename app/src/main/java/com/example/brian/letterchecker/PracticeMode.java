@@ -109,7 +109,7 @@ public class PracticeMode extends Activity implements GestureOverlayView.OnGestu
             case R.id.button2: {
                 m.release();
                 playSound.release();
-                finish = new Intent(this, LetterMenu.class);
+                finish = new Intent(this, PracticeModeAnimationScreen.class);
                 finish();
                 finish.putExtra("attempts", attempts);
                 finish.putExtra("i", i);
