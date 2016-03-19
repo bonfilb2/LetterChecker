@@ -43,7 +43,7 @@ public class QuizMode extends Activity implements GestureOverlayView.OnGesturePe
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.second_layout);
+        setContentView(R.layout.third_layout);
 
         Bundle extras = getIntent().getExtras();
         timeAllowed = extras.getInt("timeAllowed");
