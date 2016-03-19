@@ -26,4 +26,12 @@
         <item>"p"</item>
         <item>"n"</item>
     </array>
+     <array name="letterSounds">
+        <item>@raw/saudio</item>
+        <item>@raw/aaudio</item>
+        <item>@raw/taudio</item>
+        <item>@raw/iaudio</item>
+        <item>@raw/paudio</item>
+        <item>@raw/naudio</item>
+    </array>
 </resources>
