@@ -54,18 +54,22 @@ public class LetterMenu extends Activity implements AsyncResponse{
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        // Send data to database after finished with practice
-        String type = "practice";
+        Bundle extras = getIntent().getExtras();
 
-        SharedPreferences sharedPreferences = getSharedPreferences("userDetails", 0);
-        String username = sharedPreferences.getString("username", "");
-        String password = sharedPreferences.getString("password", "");
+        if(extras!=null) {
+            // Send data to database after finished with practice
+            String type = "practice";
 
-        User user = new User(username, password);
+            SharedPreferences sharedPreferences = getSharedPreferences("userDetails", 0);
+            String username = sharedPreferences.getString("username", "");
+            String password = sharedPreferences.getString("password", "");
 
-        // Asynctask for server requests
-        BackgroundWorker backgroundWorker = new BackgroundWorker(type, user, this, attempts, success);
-        backgroundWorker.delegate = this;
-        backgroundWorker.execute();
+            User user = new User(username, password);
+
+            // Asynctask for server requests
+            BackgroundWorker backgroundWorker = new BackgroundWorker(type, user, this, attempts, success);
+            backgroundWorker.delegate = this;
+            backgroundWorker.execute();
+        }
     }
 }
