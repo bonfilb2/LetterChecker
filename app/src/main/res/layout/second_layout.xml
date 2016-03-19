@@ -9,6 +9,7 @@
         android:layout_height="match_parent"
         android:orientation="vertical"
         android:layout_gravity="center">
+        
 
         <android.gesture.GestureOverlayView
             android:orientation="vertical"
