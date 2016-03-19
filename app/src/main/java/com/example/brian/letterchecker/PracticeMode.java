@@ -109,12 +109,6 @@ public class PracticeMode extends Activity implements GestureOverlayView.OnGestu
             case R.id.button2: {
                 // m.release();
                 // playSound.release();
-                backToMenu();
-                break;
-            }
-            case R.id.button3: {
-                // m.release();
-                //  playSound.release();
                 finish = new Intent(this, LetterMenu.class);
                 finish();
                 finish.putExtra("attempts", attempts);
@@ -122,6 +116,12 @@ public class PracticeMode extends Activity implements GestureOverlayView.OnGestu
                 finish.putExtra("success", success);
                 startActivity(finish);
                 overridePendingTransition(0, 0);
+                break;
+            }
+            case R.id.button3: {
+                backToMenu();
+                // m.release();
+                //  playSound.release();
                 break;
             }
         }
